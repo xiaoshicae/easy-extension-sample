@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.xiaoshicae</groupId>
+    <artifactId>easy-extension-sample</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>spring-boot-sample</module>
+        <module>none-spring-boot-sample</module>
+    </modules>
+
+    <properties>
+        <easy-extension-core.version>1.0.1</easy-extension-core.version>
+        <easy-extension-spring-boot-starter.version>1.0.1</easy-extension-spring-boot-starter.version>
+
+        <spring-boot-starter-web.version>2.7.4</spring-boot-starter-web.version>
+        <commons-lang3.version>3.14.0</commons-lang3.version>
+
+        <lombok.version>1.18.32</lombok.version>
+        <junit.version>4.13.2</junit.version>
+
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.zs</groupId>
+                <artifactId>easy-extension-core</artifactId>
+                <version>${easy-extension-core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.zs</groupId>
+                <artifactId>easy-extension-spring-boot-starter</artifactId>
+                <version>${easy-extension-spring-boot-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot-starter-web.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

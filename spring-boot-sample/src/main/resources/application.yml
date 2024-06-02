@@ -1,0 +1,4 @@
+easy-extension:
+  allow-unknown-business: true
+  enable-log: true
+
