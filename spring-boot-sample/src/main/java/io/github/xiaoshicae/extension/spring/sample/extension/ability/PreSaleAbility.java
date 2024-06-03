@@ -10,7 +10,6 @@ import java.util.List;
 
 
 // 预售能力
-//
 @Component
 public class PreSaleAbility extends AbstractAbility<ParamDTO> implements BuildOrderTagExt {
     // 能力code

@@ -6,17 +6,16 @@
     <parent>
         <groupId>io.github.xiaoshicae</groupId>
         <artifactId>easy-extension-sample</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>none-spring-boot-sample</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>easy-extension-core</artifactId>
-            <version>${easy-extension-core.version}</version>
         </dependency>
 
         <dependency>
@@ -25,5 +24,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
 </project>
