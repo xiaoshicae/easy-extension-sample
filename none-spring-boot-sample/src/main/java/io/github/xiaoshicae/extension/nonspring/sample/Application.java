@@ -59,4 +59,3 @@ public class Application {
         register.registerAbility(new DefaultAbility());
     }
 }
-

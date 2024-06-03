@@ -1,4 +1,5 @@
 # Easy-Extension框架使用样例
+[English](/README.md)
 
 ## 以SpringBoot项目为例，简单介绍框架用法
 
