@@ -10,7 +10,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>spring-boot-sample</module>
+        <module>spring-boot-sample-simple</module>
+        <module>spring-boot-sample-complex</module>
         <module>none-spring-boot-sample</module>
     </modules>
 
