@@ -6,17 +6,18 @@
 
     <groupId>io.github.xiaoshicae</groupId>
     <artifactId>easy-extension-sample</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>spring-boot-sample</module>
+        <module>spring-boot-sample-simple</module>
+        <module>spring-boot-sample-complex</module>
         <module>none-spring-boot-sample</module>
     </modules>
 
     <properties>
-        <easy-extension-core.version>1.0.1</easy-extension-core.version>
-        <easy-extension-spring-boot-starter.version>1.0.1</easy-extension-spring-boot-starter.version>
+        <easy-extension-core.version>1.0.2</easy-extension-core.version>
+        <easy-extension-spring-boot-starter.version>1.0.2</easy-extension-spring-boot-starter.version>
 
         <spring-boot-starter-web.version>2.7.4</spring-boot-starter-web.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
@@ -32,13 +33,13 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.zs</groupId>
+                <groupId>io.github.xiaoshicae</groupId>
                 <artifactId>easy-extension-core</artifactId>
                 <version>${easy-extension-core.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.zs</groupId>
+                <groupId>io.github.xiaoshicae</groupId>
                 <artifactId>easy-extension-spring-boot-starter</artifactId>
                 <version>${easy-extension-spring-boot-starter.version}</version>
             </dependency>
