@@ -16,7 +16,7 @@ public class BusinessA extends AbstractBusiness<MyParam> implements Ext1, Ext2{
         return "x.business.a";
     }
 
-    // 命中业务A的生效条件
+    // 命中业务A的生效条件，通过session传递下来，进行匹配
     @Override
     public Boolean match(MyParam param) {
         return param != null && param.getName().equals("a");
