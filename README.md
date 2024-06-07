@@ -35,7 +35,7 @@ public class Controller {
     for (Ext3 ext3 : ext3List) {
       s3List.add(ext3.doSomething3());
     }
-    return String.format("res: ext1 = %s, ext2 = %s, ext3List = %s", s1, s2, Arrays.toString(s3List));
+    return String.format("res: ext1 = %s, ext2 = %s, ext3List = %s", s1, s2, Arrays.toString(s3List.toArray()));
   }
 }
 ```
