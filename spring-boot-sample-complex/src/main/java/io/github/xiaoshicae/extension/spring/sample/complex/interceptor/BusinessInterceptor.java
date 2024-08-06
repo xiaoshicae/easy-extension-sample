@@ -1,14 +1,16 @@
 package io.github.xiaoshicae.extension.spring.sample.complex.interceptor;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import io.github.xiaoshicae.extension.spring.sample.complex.extension.paramdto.ParamDTO;
 import io.github.xiaoshicae.extension.core.ISessionManager;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.servlet.ModelAndView;
 
 
 @Component
@@ -31,7 +33,7 @@ public class BusinessInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
         //  清空session
         sessionManager.removeSession();
     }
