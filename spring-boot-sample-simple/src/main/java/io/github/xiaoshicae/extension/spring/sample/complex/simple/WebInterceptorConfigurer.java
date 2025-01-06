@@ -14,7 +14,7 @@ import jakarta.annotation.Resource;
 /**
  * web请求的Interceptor
  * 在请求处理前，准备好生效匹配的参数<MyParam>
- * 传给EasyExtension的ISessionManager进行管理，后续扩展点调用是会遍历判断哪个业务和哪些能力生效
+ * 传给EasyExtension的ISessionManager进行管理，后续扩展点调用是会遍历判断哪个业务和哪些能力生效 (即调用match判断是否生效)
  */
 @Component
 public class WebInterceptorConfigurer implements WebMvcConfigurer {

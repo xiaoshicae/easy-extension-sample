@@ -24,7 +24,7 @@
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>extension-point</artifactId>
             <version>3.0.1-SNAPSHOT</version>
-            <classifier>sources</classifier>
+            <classifier>sources</classifier> <!-- 通过sources引入源码jar包 -->
         </dependency>
 
         <dependency>

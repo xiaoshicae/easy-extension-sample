@@ -9,6 +9,7 @@ easy-extension:
   enable-log: true
   # 管理后台 admin
   admin:
+    # 系统文档访问地址，如果设置会体现在管理后台的右上角
     docUrl: "https://github.com/xiaoshicae/easy-extension"
     # 管理后台 访问地址，默认/easy-extension-admin
     path: /my-extension-admin

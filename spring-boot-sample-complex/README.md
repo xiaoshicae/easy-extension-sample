@@ -349,6 +349,55 @@ SpringBoot复杂场景(以电商下单场景为例)，考虑能力叠加，扩�
   }
   ```
 
+* 扩展点注入
+
+```java
+
+@RestController
+@RequestMapping("/api")
+public class Controller {
+
+    /**
+     * 算价扩展点
+     * 动态匹配不同业务的具体实现
+     * 未匹配到任何实现时，会走默认实现兜底
+     */
+    @ExtensionInject
+    private CalculatePriceExtension calculatePriceExtension;
+
+    /**
+     * 延迟关单扩展点
+     */
+    @ExtensionInject
+    private DelayCloseOrderExtension delayCloseOrderExtension;
+
+    /**
+     * 跳过0元校验扩展点
+     * 会匹配所有生效的扩展点实现 (包括默认能力)
+     */
+    @ExtensionInject
+    private List<SkipCheckZeroPriceExtension> skipCheckZeroPriceExtensions;
+
+
+    @RequestMapping("/process")
+    public String process() {
+
+        // 调用算价扩展点
+        OrderDTO orderDTO = new OrderDTO("1", BigDecimal.valueOf(100), BigDecimal.valueOf(0.9));
+        BigDecimal price = calculatePriceExtension.calculatePrice(orderDTO);
+
+        Duration closeOrderDuration = delayCloseOrderExtension.delayCloseOrderDuration("ot");
+
+        List<Boolean> skipCheckList = new ArrayList<>();
+        for (SkipCheckZeroPriceExtension ext : skipCheckZeroPriceExtensions) {
+            skipCheckList.add(ext.skipCheckZeroPrice());
+        }
+
+        return String.format("res: price = %.3f && close order duration = %s && skip ckeck list = %s", price, closeOrderDuration.toString(), Arrays.toString(skipCheckList.toArray()));
+    }
+}
+```
+
 * 业务，能力及扩展点情况实现概览
 
 | 扩展点实现                 | 生效条件                | CalculatePriceExtension      | DelayCloseOrderExtension | SkipCheckZeroPriceExtension |
@@ -423,7 +472,7 @@ SpringBoot复杂场景(以电商下单场景为例)，考虑能力叠加，扩�
 | 最终冲突执行情况              | -   | -                   | 业务和能力均为实现，走默认实现              | 多个实现，选择优先级最高的实现          | 多个实现，全部获取                   |
 
 ## 管理后台功能简介
-
+### 相关配置
 * 引入依赖
   ```xml
   <dependency>
@@ -446,7 +495,7 @@ SpringBoot复杂场景(以电商下单场景为例)，考虑能力叠加，扩�
           <groupId>io.github.xiaoshicae</groupId>
           <artifactId>extension-point</artifactId>
           <version>3.0.1-SNAPSHOT</version>
-          <classifier>sources</classifier>
+          <classifier>sources</classifier> <!-- 通过sources引入源码jar包 -->
       </dependency>
   
       <!-- 其它源码jar包依赖 -->
@@ -469,7 +518,9 @@ SpringBoot复杂场景(以电商下单场景为例)，考虑能力叠加，扩�
   </plugin>
   ```
 * 为了避免idea本地调试找不到源码jar包，可以在先install把所有工程打包到本地maven仓库，再手动改下business-film/business-trip/extension-point的pom
-  version，这样web项目就会从maven仓库查找依赖，而不是从当前idea工程查找。
+  version，这样web项目就会从maven仓库查找依赖，而不是从当前idea工程查找依赖。
+
+### 管理后台使用
 * 默认访问的url: http://127.0.0.1:8080/my-extension-admin
 * 管理后台提供的能力:
     * 提供扩展点，能力和业务的可视化能力
