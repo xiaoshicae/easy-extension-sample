@@ -1,50 +1,43 @@
 package io.github.xiaoshicae.extension.spring.sample.complex.simple;
 
-import io.github.xiaoshicae.extension.core.business.AbstractBusiness;
-import io.github.xiaoshicae.extension.core.business.UsedAbility;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
+import io.github.xiaoshicae.extension.core.annotation.Business;
+import io.github.xiaoshicae.extension.core.common.Matcher;
 
+/**
+ * 业务B
+ * 实现了扩展点1和扩展点3
+ * 需要@Business注解，以便包扫描能识别到；code表示能力的唯一id
+ * 业务B没有挂载任何能力
+ */
+@Business(code = "app.business.b")
+public class BusinessB implements Matcher<MyParam>, Ext1, Ext3 {
 
-// 业务B，实现了扩展点1和扩展点3
-// 需要@Component注解，以便spring包扫描识别
-@Component
-public class BusinessB extends AbstractBusiness<MyParam> implements Ext1, Ext3{
-    // 业务身B份唯一标识
-    @Override
-    public String code() {
-        return "x.business.b";
-    }
-
-    // 命中业务B的生效条件，通过session传递下来，进行匹配
+    /**
+     * 业务命中判断
+     * 业务必须实现Matcher<XXX>
+     *
+     * @param param for match predict
+     * @return 业务是否命中
+     */
     @Override
     public Boolean match(MyParam param) {
-        return param != null && param.getName().equals("b");
+        return param.getName().contains("biz-b");
     }
 
-    // 优先级(复杂场景下，业务挂载了能力，可能存在扩展点冲突，需要通过优先级解决冲突)
-    // 当前样例先忽略该方法
-    @Override
-    public Integer priority() {
-        return 100;
-    }
-
-    // 业务B挂载了哪些能力
-    @Override
-    public List<UsedAbility> usedAbilities() {
-        return List.of();
-    }
-
-    // 业务B实现了扩展点1
+    /**
+     * 扩展点1的BusinessB自定义实现
+     */
     @Override
     public String doSomething1() {
-        return "businessB doSomething1";
+        return "BusinessB doSomething1";
     }
 
-    // 业务B实现了扩展点3
+    /**
+     * 扩展点3的BusinessB自定义实现
+     */
     @Override
     public String doSomething3() {
-        return "businessB doSomething3";
+        return "BusinessB doSomething3";
     }
 }
