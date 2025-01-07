@@ -13,13 +13,14 @@
     <version>3.0.1-SNAPSHOT</version>
 
     <dependencies>
+        <!-- 扩展点，扩展点默认实现，能力，匹配参数等定义 -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>extension-point</artifactId>
             <version>3.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!--  依赖源码，admin会读取源码内容  -->
+        <!--  扩展点，扩展点默认实现，能力，匹配参数等定义源码，admin管理后台会读取源码内容  -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>extension-point</artifactId>
@@ -27,13 +28,14 @@
             <classifier>sources</classifier> <!-- 通过sources引入源码jar包 -->
         </dependency>
 
+        <!-- 酒旅业务 -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>business-trip</artifactId>
             <version>3.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!--  依赖源码，admin会读取源码内容  -->
+        <!-- 酒旅业务源码 -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>business-trip</artifactId>
@@ -41,13 +43,14 @@
             <classifier>sources</classifier>
         </dependency>
 
+        <!-- 电影票业务 -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>business-film</artifactId>
             <version>3.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!--  依赖源码，admin会读取源码内容  -->
+        <!-- 电影票业务源码 -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>business-film</artifactId>
