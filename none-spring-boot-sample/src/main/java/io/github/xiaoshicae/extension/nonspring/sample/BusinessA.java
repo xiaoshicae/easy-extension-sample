@@ -7,14 +7,11 @@ import io.github.xiaoshicae.extension.core.common.Matcher;
 import java.util.List;
 
 /**
- * 业务A
- * 实现了扩展点1
- * 业务挂载了能力，即继承了能力的扩展点实现
+ * 业务A 实现了扩展点1，业务挂载了能力X，即继承了能力X的扩展点实现。
  */
 public class BusinessA extends AbstractBusiness<MyParam>  implements Matcher<MyParam>, Ext1 {
-
     /**
-     * 业务code
+     * code表示业务的唯一id (即业务身份)
      */
     @Override
     public String code() {
@@ -49,7 +46,6 @@ public class BusinessA extends AbstractBusiness<MyParam>  implements Matcher<MyP
         return "BusinessA doSomething1";
     }
 
-
     /**
      * BusinessA的优先级
      */
@@ -57,7 +53,6 @@ public class BusinessA extends AbstractBusiness<MyParam>  implements Matcher<MyP
     public Integer priority() {
         return 0;
     }
-
 
     /**
      * BusinessA使用了AbilityX

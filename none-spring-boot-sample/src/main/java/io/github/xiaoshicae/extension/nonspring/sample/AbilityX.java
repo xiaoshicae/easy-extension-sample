@@ -13,7 +13,7 @@ import java.util.List;
 public class AbilityX extends AbstractAbility<MyParam> implements Matcher<MyParam>, Ext2 {
 
     /**
-     * 能力code
+     * code表示能力唯一id
      */
     @Override
     public String code() {
