@@ -5,9 +5,8 @@ import io.github.xiaoshicae.extension.core.common.Matcher;
 
 
 /**
- * 能力X
- * 实现了扩展点2
- * 需要@Ability注解，以便包扫描能识别到；code表示能力的唯一id
+ * 能力X 实现了扩展点2
+ * <br>需要@Ability注解，以便包扫描能识别到；code表示能力的唯一id
  */
 @Ability(code = "app.ability.x")
 public class AbilityX implements Matcher<MyParam>, Ext2 {
