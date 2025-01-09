@@ -5,69 +5,72 @@
     <parent>
         <groupId>io.github.xiaoshicae</groupId>
         <artifactId>easy-extension-sample</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>web</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
 
     <dependencies>
-        <!-- 扩展点，扩展点默认实现，能力，匹配参数等定义 -->
+        <!--  扩展点，扩展点默认实现，匹配参数，能力 SDK  -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
-            <artifactId>extension-point</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
+            <artifactId>extension-point-sdk</artifactId>
         </dependency>
 
-        <!--  扩展点，扩展点默认实现，能力，匹配参数等定义源码，admin管理后台会读取源码内容  -->
-        <dependency>
-            <groupId>io.github.xiaoshicae</groupId>
-            <artifactId>extension-point</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
-            <classifier>sources</classifier> <!-- 通过sources引入源码jar包 -->
-        </dependency>
-
-        <!-- 酒旅业务 -->
+        <!--  Trip业务  -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>business-trip</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!-- 酒旅业务源码 -->
-        <dependency>
-            <groupId>io.github.xiaoshicae</groupId>
-            <artifactId>business-trip</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
-
-        <!-- 电影票业务 -->
+        <!--  Film业务  -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>business-film</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!-- 电影票业务源码 -->
-        <dependency>
-            <groupId>io.github.xiaoshicae</groupId>
-            <artifactId>business-film</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
-            <classifier>sources</classifier>
-        </dependency>
 
+        <!--
+              扩展点，扩展点默认实现，匹配参数，能力 SDK 源码jar，
+              Trip业务源码
+              Film业务源码
+              admin会读取展示在页面上
+
+              先把上面的依赖install到本地，这样源码jar包就会被install到本地
+              取消以下源码包注释，可以在admin页面上查看源码
+        -->
+<!--        <dependency>-->
+<!--            <groupId>io.github.xiaoshicae</groupId>-->
+<!--            <artifactId>extension-point-sdk</artifactId>-->
+<!--            <classifier>sources</classifier> &lt;!&ndash; 通过sources引入源码jar包 &ndash;&gt;-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>io.github.xiaoshicae</groupId>-->
+<!--            <artifactId>business-trip</artifactId>-->
+<!--            <classifier>sources</classifier>-->
+<!--        </dependency>-->
+<!--        -->
+<!--        <dependency>-->
+<!--            <groupId>io.github.xiaoshicae</groupId>-->
+<!--            <artifactId>business-film</artifactId>-->
+<!--            <classifier>sources</classifier>-->
+<!--        </dependency>-->
+
+        <!--  springboot依赖  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!--  easy-extension springboot starter依赖  -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>easy-extension-spring-boot-starter</artifactId>
         </dependency>
 
+        <!--  easy-extension admin springboot starter依赖  -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>easy-extension-admin-spring-boot-starter</artifactId>
@@ -82,6 +85,18 @@
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

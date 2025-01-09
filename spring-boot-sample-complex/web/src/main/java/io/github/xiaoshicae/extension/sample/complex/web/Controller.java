@@ -55,6 +55,6 @@ public class Controller {
             skipCheckList.add(ext.skipCheckZeroPrice());
         }
 
-        return String.format("res: price = %.3f && close order duration = %s && skip ckeck list = %s", price, closeOrderDuration.toString(), Arrays.toString(skipCheckList.toArray()));
+        return String.format("res: price = %.3f && close order duration = %s && skip check list = %s", price, closeOrderDuration.toString(), Arrays.toString(skipCheckList.toArray()));
     }
 }

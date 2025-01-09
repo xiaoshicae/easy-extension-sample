@@ -7,11 +7,10 @@
     <parent>
         <groupId>io.github.xiaoshicae</groupId>
         <artifactId>easy-extension-sample</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>spring-boot-sample-simple</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

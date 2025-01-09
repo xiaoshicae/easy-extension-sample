@@ -393,7 +393,7 @@ public class Controller {
             skipCheckList.add(ext.skipCheckZeroPrice());
         }
 
-        return String.format("res: price = %.3f && close order duration = %s && skip ckeck list = %s", price, closeOrderDuration.toString(), Arrays.toString(skipCheckList.toArray()));
+        return String.format("res: price = %.3f && close order duration = %s && skip check list = %s", price, closeOrderDuration.toString(), Arrays.toString(skipCheckList.toArray()));
     }
 }
 ```
@@ -416,7 +416,7 @@ public class Controller {
   GET http://127.0.0.1:8080/api/process?name=unknown
   
   由于未命中任何业务,扩展点均走默认实现,因此返回值为:
-  res: price = 90.000 && close order duration = PT10M && skip ckeck list = [false]
+  res: price = 90.000 && close order duration = PT10M && skip check list = [false]
   ```
 
 * Case2: 请求命中TripBusiness
@@ -424,20 +424,20 @@ public class Controller {
   ```shell
   GET http://127.0.0.1:8080/api/process?name=xxx-trip
   
-  命中了业务Trip,但是业务实现了扩展点CalculatePriceExtension,因此返回值为:
-  res: price = 65.000 && close order duration = PT10M && skip ckeck list = [false]
+  命中了业务Trip,业务实现了扩展点CalculatePriceExtension,因此返回值为:
+  res: price = 65.000 && close order duration = PT10M && skip check list = [false]
   ```
 
-* Case3: 请求命中FilmBusiness & 所有能力均为生效
+* Case3: 请求命中FilmBusiness & 所有能力均未生效
 
   ```shell
   GET http://127.0.0.1:8080/api/process?name=film
   
-  命中了业务FilmBusiness,业务实现了扩展点DelayCloseOrderExtension,业务所挂载的能力均为生效,因此返回值为:
-  es: price = 90.000 && close order duration = PT3M && skip ckeck list = [false]
+  命中了业务FilmBusiness,业务实现了扩展点DelayCloseOrderExtension,业务所挂载的能力均未生效,因此返回值为:
+  res: price = 90.000 && close order duration = PT3M && skip check list = [false]
   ```
 
-* Case3: 请求命中FilmBusiness & LongCloseOrderAbility能力生效
+* Case4: 请求命中FilmBusiness & LongCloseOrderAbility能力生效
 
   ```shell
   GET http://127.0.0.1:8080/api/process?name=film&value=long-close
@@ -445,7 +445,7 @@ public class Controller {
   命中了业务FilmBusiness,业务实现了扩展点DelayCloseOrderExtension,
   业务挂载LongCloseOrderAbility能力生效,能力也实现了扩展点DelayCloseOrderExtension,
   由于挂载的能力优先级更高因此返回值为:
-  res: price = 90.000 && close order duration = PT1H && skip ckeck list = [false]
+  res: price = 90.000 && close order duration = PT1H && skip check list = [false]
   ```
 
 * Case5: 请求命中FilmBusiness & FreeTrialAbility能力生效 &LongCloseOrderAbility能力生效
@@ -458,7 +458,7 @@ public class Controller {
   业务挂载FreeTrialAbility能力生效,能力实现了扩展点DelayCloseOrderExtension和SkipCheckZeroPriceExtension,
   业务挂载LongCloseOrderAbility能力生效,能力实现了扩展点DelayCloseOrderExtension,
   由于挂载的能力优先级更高因此返回值为:
-  res: price = 90.000 && close order duration = PT0S && skip ckeck list = [true, false]
+  res: price = 90.000 && close order duration = PT0S && skip check list = [true, false]
   ```
 
 ## Case5的扩展点冲突及执行情况分析
@@ -478,23 +478,23 @@ public class Controller {
   <dependency>
       <groupId>io.github.xiaoshicae</groupId>
       <artifactId>easy-extension-admin-spring-boot-starter</artifactId>
-      <version>3.0.1</version>
+      <version>3.0.2</version>
   </dependency>
   ```
-* 项目依赖扩展点jar包同时也需要依赖源码jar包
+* 项目依赖扩展点jar包同时也需要依赖源码jar包(⚠️注意: 先install到本地maven仓库，web才能正确依赖到源码jar包)
   ```xml
   <dependencies>
       <dependency>
           <groupId>io.github.xiaoshicae</groupId>
-          <artifactId>extension-point</artifactId>
-          <version>3.0.1-SNAPSHOT</version>
+          <artifactId>extension-point-sdk</artifactId>
+          <version>3.0.2-SNAPSHOT</version>
       </dependency>
   
       <!--  依赖源码，admin会读取源码内容  -->
       <dependency>
           <groupId>io.github.xiaoshicae</groupId>
-          <artifactId>extension-point</artifactId>
-          <version>3.0.1-SNAPSHOT</version>
+          <artifactId>extension-point-sdk</artifactId>
+          <version>3.0.2-SNAPSHOT</version>
           <classifier>sources</classifier> <!-- 通过sources引入源码jar包 -->
       </dependency>
   
@@ -517,9 +517,9 @@ public class Controller {
       </executions>
   </plugin>
   ```
-* 为了避免idea本地调试找不到源码jar包，可以在先install把所有工程打包到本地maven仓库，再手动改下business-film/business-trip/extension-point的pom
+* ⚠️为了避免idea本地调试找不到源码jar包，可以在先install把所有工程打包到本地maven仓库，再手动改下business-film/business-trip/extension-point的pom
   version，这样web项目就会从maven仓库查找依赖，而不是从当前idea工程查找依赖。
-
+![](/doc/)
 ### 管理后台使用
 * 默认访问的url: http://127.0.0.1:8080/my-extension-admin
 * 管理后台提供的能力:
