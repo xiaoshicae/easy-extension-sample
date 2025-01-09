@@ -12,7 +12,7 @@
 
     <groupId>io.github.xiaoshicae</groupId>
     <artifactId>easy-extension-sample</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -20,11 +20,14 @@
         <module>spring-boot-sample-simple</module>
         <module>spring-boot-sample-complex/business-trip</module>
         <module>spring-boot-sample-complex/business-film</module>
-        <module>spring-boot-sample-complex/extension-point</module>
+        <module>spring-boot-sample-complex/extension-point-sdk</module>
         <module>spring-boot-sample-complex/web</module>
     </modules>
 
     <properties>
+        <easy-extension-version>3.0.2</easy-extension-version>
+        <easy-extension-sample-version>3.0.2-SNAPSHOT</easy-extension-sample-version>
+
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
@@ -34,19 +37,58 @@
             <dependency>
                 <groupId>io.github.xiaoshicae</groupId>
                 <artifactId>easy-extension-core</artifactId>
-                <version>3.0.1</version>
+                <version>${easy-extension-version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.xiaoshicae</groupId>
                 <artifactId>easy-extension-spring-boot-starter</artifactId>
-                <version>3.0.1</version>
+                <version>${easy-extension-version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.xiaoshicae</groupId>
                 <artifactId>easy-extension-admin-spring-boot-starter</artifactId>
-                <version>3.0.1</version>
+                <version>${easy-extension-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.xiaoshicae</groupId>
+                <artifactId>extension-point-sdk</artifactId>
+                <version>${easy-extension-sample-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.xiaoshicae</groupId>
+                <artifactId>business-trip</artifactId>
+                <version>${easy-extension-sample-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.xiaoshicae</groupId>
+                <artifactId>business-film</artifactId>
+                <version>${easy-extension-sample-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.xiaoshicae</groupId>
+                <artifactId>extension-point-sdk</artifactId>
+                <classifier>sources</classifier>
+                <version>${easy-extension-sample-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.xiaoshicae</groupId>
+                <artifactId>business-trip</artifactId>
+                <classifier>sources</classifier>
+                <version>${easy-extension-sample-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.xiaoshicae</groupId>
+                <artifactId>business-film</artifactId>
+                <classifier>sources</classifier>
+                <version>${easy-extension-sample-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -322,6 +322,7 @@ SpringBoot简单场景
 | 默认实现      | 默认兜底              | "Default doSomething1"   | "Default doSomething2" | "Default doSomething3"   |
 
 ## 三、扩展点使用情况分析
+以下case可以参考[ApplicationTest](./src/test/java/ApplicationTest.java)
 
 * Case1: 未命中任何业务
 

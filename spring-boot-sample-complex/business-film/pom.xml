@@ -4,24 +4,21 @@
     <parent>
         <groupId>io.github.xiaoshicae</groupId>
         <artifactId>easy-extension-sample</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>business-film</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>easy-extension-core</artifactId>
-            <version>3.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
-            <artifactId>extension-point</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
+            <artifactId>extension-point-sdk</artifactId>
         </dependency>
     </dependencies>
 

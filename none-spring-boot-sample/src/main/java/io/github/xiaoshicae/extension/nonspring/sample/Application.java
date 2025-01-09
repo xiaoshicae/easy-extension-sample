@@ -1,7 +1,7 @@
 package io.github.xiaoshicae.extension.nonspring.sample;
 
 import io.github.xiaoshicae.extension.core.DefaultExtensionContext;
-import io.github.xiaoshicae.extension.core.ExtensionContextRegisterHelper;
+import io.github.xiaoshicae.extension.core.util.ExtensionContextRegisterHelper;
 import io.github.xiaoshicae.extension.core.IExtensionContext;
 import io.github.xiaoshicae.extension.core.exception.ExtensionException;
 import io.github.xiaoshicae.extension.core.exception.QueryException;
@@ -81,7 +81,7 @@ public class Application {
 
     private void registerBusinessAndAbility(IExtensionContext<MyParam> register) throws ExtensionException {
         // 册helper工具(便于注册不受顺序影响)
-        ExtensionContextRegisterHelper<MyParam> helper = new ExtensionContextRegisterHelper<>();
+        ExtensionContextRegisterHelper<MyParam> helper = new ExtensionContextRegisterHelper<>(register);
 
         // 收集扩展点
         helper.addExtensionPointClasses(Ext1.class, Ext2.class, Ext3.class);
@@ -99,6 +99,6 @@ public class Application {
         helper.addBusinesses(new BusinessA(), new BusinessB(), new BusinessC());
 
         // 执行注册
-        helper.doRegister(register);
+        helper.doRegister();
     }
 }
