@@ -8,6 +8,7 @@ SpringBoot复杂场景(以电商下单场景为例)，考虑能力叠加，扩�
 * 简单场景的非Spring-oot项目接入(需要自己注册业务和能力)
   ，请参考[none-spring-boot-sample](../none-spring-boot-sample/README.md)
 * 框架设计及详细使用文档请参考: [wiki](https://github.com/xiaoshicae/easy-extension/wiki)
+* ⚠️注意: 先maven install项目到本地仓库，源码jar包同时也会被打包install本地仓库，才能被admin管理后台正确引入
 
 ## 二、当前场景demo背景条件简介
 
@@ -517,9 +518,7 @@ public class Controller {
       </executions>
   </plugin>
   ```
-* ⚠️为了避免idea本地调试找不到源码jar包，可以在先install把所有工程打包到本地maven仓库，再手动改下business-film/business-trip/extension-point的pom
-  version，这样web项目就会从maven仓库查找依赖，而不是从当前idea工程查找依赖。
-![](/doc/)
+
 ### 管理后台使用
 * 默认访问的url: http://127.0.0.1:8080/my-extension-admin
 * 管理后台提供的能力:

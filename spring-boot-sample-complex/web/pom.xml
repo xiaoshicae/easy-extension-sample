@@ -31,17 +31,7 @@
         </dependency>
 
 
-        <!--
-              扩展点，扩展点默认实现，匹配参数，能力 SDK 源码jar，
-              Trip业务源码
-              Film业务源码
-              admin会读取展示在页面上
-
-              1. 先把上面的依赖install到本地，这样源码jar包就同时会被install到本地
-              2. 运行时参考/doc/resources-code-classpath.png将本地仓库的源码路径加入到classpath；
-                 或者修改下上面maven工程的版本号，这样idea会从本地maven仓库获取源码jar包
-              3. 取消以下源码包注释，可以在admin页面上查看源码
-        -->
+        <!-- 源码jar包依赖，admin会读取展示在页面上 -->
         <dependency>
             <groupId>io.github.xiaoshicae</groupId>
             <artifactId>extension-point-sdk</artifactId>
@@ -120,6 +110,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>process-aot</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
