@@ -37,8 +37,9 @@
               Film业务源码
               admin会读取展示在页面上
 
-              先把上面的依赖install到本地，这样源码jar包就会被install到本地
-              取消以下源码包注释，可以在admin页面上查看源码
+              1. 先把上面的依赖install到本地，这样源码jar包就会被install到本地
+              2. 运行是参考/doc/resources-code-classpath.png将本地仓库的源码路径加入到classpath
+              3. 取消以下源码包注释，可以在admin页面上查看源码
         -->
 <!--        <dependency>-->
 <!--            <groupId>io.github.xiaoshicae</groupId>-->
