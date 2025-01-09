@@ -37,27 +37,28 @@
               Film业务源码
               admin会读取展示在页面上
 
-              1. 先把上面的依赖install到本地，这样源码jar包就会被install到本地
-              2. 运行是参考/doc/resources-code-classpath.png将本地仓库的源码路径加入到classpath
+              1. 先把上面的依赖install到本地，这样源码jar包就同时会被install到本地
+              2. 运行时参考/doc/resources-code-classpath.png将本地仓库的源码路径加入到classpath；
+                 或者修改下上面maven工程的版本号，这样idea会从本地maven仓库获取源码jar包
               3. 取消以下源码包注释，可以在admin页面上查看源码
         -->
-<!--        <dependency>-->
-<!--            <groupId>io.github.xiaoshicae</groupId>-->
-<!--            <artifactId>extension-point-sdk</artifactId>-->
-<!--            <classifier>sources</classifier> &lt;!&ndash; 通过sources引入源码jar包 &ndash;&gt;-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.github.xiaoshicae</groupId>
+            <artifactId>extension-point-sdk</artifactId>
+            <classifier>sources</classifier> <!-- 通过sources引入源码jar包 -->
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>io.github.xiaoshicae</groupId>-->
-<!--            <artifactId>business-trip</artifactId>-->
-<!--            <classifier>sources</classifier>-->
-<!--        </dependency>-->
-<!--        -->
-<!--        <dependency>-->
-<!--            <groupId>io.github.xiaoshicae</groupId>-->
-<!--            <artifactId>business-film</artifactId>-->
-<!--            <classifier>sources</classifier>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.github.xiaoshicae</groupId>
+            <artifactId>business-trip</artifactId>
+            <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.xiaoshicae</groupId>
+            <artifactId>business-film</artifactId>
+            <classifier>sources</classifier>
+        </dependency>
 
         <!--  springboot依赖  -->
         <dependency>

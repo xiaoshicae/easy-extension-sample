@@ -52,7 +52,6 @@
                 <version>${easy-extension-version}</version>
             </dependency>
 
-
             <dependency>
                 <groupId>io.github.xiaoshicae</groupId>
                 <artifactId>extension-point-sdk</artifactId>
@@ -71,6 +70,26 @@
                 <version>${easy-extension-sample-version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.github.xiaoshicae</groupId>
+                <artifactId>extension-point-sdk</artifactId>
+                <classifier>sources</classifier>
+                <version>${easy-extension-sample-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.xiaoshicae</groupId>
+                <artifactId>business-trip</artifactId>
+                <classifier>sources</classifier>
+                <version>${easy-extension-sample-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.xiaoshicae</groupId>
+                <artifactId>business-film</artifactId>
+                <classifier>sources</classifier>
+                <version>${easy-extension-sample-version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
