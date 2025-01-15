@@ -45,9 +45,7 @@ public class ApplicationTest {
     public void testCase1() throws Exception {
         String expected = "res: price = 90.000 && close order duration = PT10M && skip check list = [false]";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=unknown"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(expected));
+        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=unknown")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(expected));
     }
 
     /**
@@ -65,9 +63,7 @@ public class ApplicationTest {
     public void testCase2() throws Exception {
         String excepted = "res: price = 65.000 && close order duration = PT10M && skip check list = [false]";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=xxx-trip"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(excepted));
+        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=xxx-trip")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
     }
 
 
@@ -86,9 +82,7 @@ public class ApplicationTest {
     public void testCase3() throws Exception {
         String excepted = "res: price = 90.000 && close order duration = PT3M && skip check list = [false]";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=film"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(excepted));
+        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=film")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
     }
 
     /**
@@ -111,9 +105,7 @@ public class ApplicationTest {
     public void testCase4() throws Exception {
         String excepted = "res: price = 90.000 && close order duration = PT1H && skip check list = [false]";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=film&value=long-close"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(excepted));
+        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=film&value=long-close")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
     }
 
     /**
@@ -140,8 +132,19 @@ public class ApplicationTest {
     public void testCase5() throws Exception {
         String excepted = "res: price = 90.000 && close order duration = PT0S && skip check list = [true, false]";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=film&value=long-close::free-trial"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(excepted));
+        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=film&value=long-close::free-trial")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
+    }
+
+    /**
+     * Case6: scope测试
+     *
+     * <p> GET http://127.0.0.1:8080/api/process-with-invoker?name=film&scope=xxx&scopedName=xxx-trip
+     *
+     * <p> 命中了业务FilmBusiness，scope命中xxx-trip
+     */
+    @Test
+    public void testCase6() throws Exception {
+        String excepted = "res: price1 = 90.000 && price2 = 90.000 && price3 = 65.000";
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/process-with-invoker?name=film&scope=xxx&scopedName=xxx-trip")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
     }
 }

@@ -1,10 +1,12 @@
 package io.github.xiaoshicae.extension.sample.complex.web;
 
+import io.github.xiaoshicae.extension.core.IExtensionInvoker;
 import io.github.xiaoshicae.extension.sample.complex.extpoint.CalculatePriceExtension;
 import io.github.xiaoshicae.extension.sample.complex.extpoint.DelayCloseOrderExtension;
 import io.github.xiaoshicae.extension.sample.complex.dto.OrderDTO;
 import io.github.xiaoshicae.extension.sample.complex.extpoint.SkipCheckZeroPriceExtension;
 import io.github.xiaoshicae.extension.spring.boot.autoconfigure.annotation.ExtensionInject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,10 +42,14 @@ public class Controller {
     @ExtensionInject
     private List<SkipCheckZeroPriceExtension> skipCheckZeroPriceExtensions;
 
+    /**
+     * 注入扩展点调用invoker
+     */
+    @Autowired
+    private IExtensionInvoker extensionInvoker;
 
     @RequestMapping("/process")
     public String process() {
-
         // 调用算价扩展点
         OrderDTO orderDTO = new OrderDTO("1", BigDecimal.valueOf(100), BigDecimal.valueOf(0.9));
         BigDecimal price = calculatePriceExtension.calculatePrice(orderDTO);
@@ -56,5 +62,19 @@ public class Controller {
         }
 
         return String.format("res: price = %.3f && close order duration = %s && skip check list = %s", price, closeOrderDuration.toString(), Arrays.toString(skipCheckList.toArray()));
+    }
+
+    /**
+     * 通过invoker调用扩展点
+     * <br>
+     * 如果一起请求有多个业务并行，这个时候需要用invoker通过scopedInvoke指定特定的scope进行调用
+     */
+    @RequestMapping("/process-with-invoker")
+    public String processWithInvoker() throws Exception {
+        OrderDTO orderDTO = new OrderDTO("2", BigDecimal.valueOf(100), BigDecimal.valueOf(0.9));
+        BigDecimal price1 = calculatePriceExtension.calculatePrice(orderDTO);
+        BigDecimal price2 = extensionInvoker.invoke(CalculatePriceExtension.class, e -> e.calculatePrice(orderDTO));
+        BigDecimal price3 = extensionInvoker.scopedInvoke("xxx", CalculatePriceExtension.class, e -> e.calculatePrice(orderDTO));
+        return String.format("res: price1 = %.3f && price2 = %.3f && price3 = %.3f", price1, price2, price3);
     }
 }
