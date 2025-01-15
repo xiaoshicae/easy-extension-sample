@@ -40,6 +40,9 @@ public class ApplicationTest {
 
     /**
      * Case1: 未命中任何业务
+     *
+     * <p>URL: http://localhost:8080/api/process?name=unknown
+     *
      * <p> 由于未命中任何业务,扩展点均走默认实现
      * <p> {@link Ext1}的默认实现 {@link ExtDefaultImpl#doSomething1()}: "Default doSomething1"
      * <p> {@link Ext2}的默认实现 {@link ExtDefaultImpl#doSomething2()}: "Default doSomething2"
@@ -56,6 +59,9 @@ public class ApplicationTest {
 
     /**
      * Case2: 请求命中BusinessC
+     *
+     * <p>URL: http://localhost:8080/api/process?name=biz-c
+     *
      * <p> 命中了业务C,但是业务C未实现任何扩展点也没挂载任何能力,扩展点均走默认实现
      * <p> {@link Ext1}的默认实现 {@link ExtDefaultImpl#doSomething1()}: "Default doSomething1"
      * <p> {@link Ext2}的默认实现 {@link ExtDefaultImpl#doSomething2()}: "Default doSomething2"
@@ -73,6 +79,9 @@ public class ApplicationTest {
 
     /**
      * Case3: 请求命中BusinessB
+     *
+     * <p>URL: http://localhost:8080/api/process?name=biz-b
+     *
      * <p> 命中了业务B,业务B实现了扩展点1和3
      * <p> {@link Ext1}的BusinessB实现 {@link BusinessB#doSomething1()}: "Default doSomething1"
      * <p> {@link Ext2}的默认实现 {@link ExtDefaultImpl#doSomething2()}: "Default doSomething2"
@@ -90,6 +99,9 @@ public class ApplicationTest {
 
     /**
      * Case4: 请求命中{@link BusinessA} & {@link AbilityX}未生效
+     *
+     * <p>URL: http://localhost:8080/api/process?name=biz-a
+     *
      * <p> 命中了业务A,业务A实现了扩展点1
      * <p> {@link Ext1}的业务A实现 {@link BusinessA#doSomething1()}:     "BusinessA doSomething1"
      * <p> {@link Ext2}的默认实现 {@link ExtDefaultImpl#doSomething2()}: "Default doSomething2"
@@ -106,6 +118,9 @@ public class ApplicationTest {
 
     /**
      * Case5: 请求命中{@link BusinessA} & {@link AbilityX}生效
+     *
+     * <p>URL: http://localhost:8080/api/process?name=biz-a::ability-x
+     *
      * <p> 命中了业务A,且能力X生效,业务A实现了扩展点1,能力X实现扩展点2
      * <p> {@link Ext1}的业务A实现 {@link BusinessA#doSomething1()}:     "BusinessA doSomething1"
      * <p> {@link Ext2}的能力X实现 {@link AbilityX#doSomething2()}:      "AbilityX doSomething2"
