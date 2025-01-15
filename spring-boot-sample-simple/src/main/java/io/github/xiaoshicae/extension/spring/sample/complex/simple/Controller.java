@@ -1,7 +1,6 @@
 package io.github.xiaoshicae.extension.spring.sample.complex.simple;
 
 import io.github.xiaoshicae.extension.spring.boot.autoconfigure.annotation.ExtensionInject;
-import jakarta.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

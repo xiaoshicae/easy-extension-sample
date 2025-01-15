@@ -17,6 +17,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
+/**
+ * Admin: http://127.0.0.1:8080/my-extension-admin
+ */
+
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 public class ApplicationTest {
@@ -28,6 +32,8 @@ public class ApplicationTest {
 
     /**
      * Case1: 未命中任何业务
+     *
+     * <p> GET http://127.0.0.1:8080/api/process?name=unknown
      *
      * <p> 由于未命中任何业务,扩展点均走默认实现。
      *
@@ -46,6 +52,8 @@ public class ApplicationTest {
 
     /**
      * Case2: 请求命中TripBusiness
+     *
+     * <p> GET http://127.0.0.1:8080/api/process?name=xxx-trip
      *
      * <p> 命中了业务Trip,业务实现了扩展点CalculatePriceExtension。
      *
@@ -66,6 +74,8 @@ public class ApplicationTest {
     /**
      * Case3: 请求命中FilmBusiness & 所有能力均未生效
      *
+     * <p> GET http://127.0.0.1:8080/api/process?name=film
+     *
      * <p> 命中了业务FilmBusiness,业务实现了扩展点DelayCloseOrderExtension,业务所挂载的能力均未生效。
      *
      * <p> {@link CalculatePriceExtension}的默认实现{@link ExtDefaultImpl#calculatePrice(OrderDTO)}: 3 minutes
@@ -83,6 +93,8 @@ public class ApplicationTest {
 
     /**
      * Case4: 请求命中FilmBusiness & LongCloseOrderAbility能力生效
+     *
+     * <p> GET http://127.0.0.1:8080/api/process?name=film&value=long-close
      *
      * <p>
      * 命中了业务FilmBusiness，业务实现了扩展点DelayCloseOrderExtension。
@@ -106,6 +118,8 @@ public class ApplicationTest {
 
     /**
      * Case5: 请求命中FilmBusiness & FreeTrialAbility能力生效 &LongCloseOrderAbility能力生效
+     *
+     * <p> GET http://127.0.0.1:8080/api/process?name=film&value=long-close::free-trial
      *
      * <p>
      * 命中了业务FilmBusiness，业务实现了扩展点DelayCloseOrderExtension。

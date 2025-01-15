@@ -482,7 +482,8 @@ public class Controller {
       <version>3.0.2</version>
   </dependency>
   ```
-* 项目依赖扩展点jar包同时也需要依赖源码jar包(⚠️注意: 先install到本地maven仓库，web才能正确依赖到源码jar包)
+* 项目依赖扩展点jar包同时也需要依赖源码jar包
+⚠️注意: 本地调试可以直接把当前工程加入到classpath，参考[图片](/doc/resources-code-classpath.png)进行配置。
   ```xml
   <dependencies>
       <dependency>
