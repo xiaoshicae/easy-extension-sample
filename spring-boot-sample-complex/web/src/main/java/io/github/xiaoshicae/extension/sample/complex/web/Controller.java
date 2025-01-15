@@ -44,6 +44,10 @@ public class Controller {
 
     /**
      * 注入扩展点调用invoker
+     * 支持单个扩展点调用   E res = invoke(Ext.class, e -> e.xxx())
+     * 支持多个个扩展点调用 List<E> resList = invokeAll(Ext.class, e -> e.xxx())
+     * 支持单个扩展点调用   E res = scopedInvoke("s", Ext.class, e -> e.xxx())
+     * 支持多个个扩展点调用 List<E> resList = scopedInvokeAll("s", Ext.class, e -> e.xxx())
      */
     @Autowired
     private IExtensionInvoker extensionInvoker;
@@ -72,8 +76,14 @@ public class Controller {
     @RequestMapping("/process-with-invoker")
     public String processWithInvoker() throws Exception {
         OrderDTO orderDTO = new OrderDTO("2", BigDecimal.valueOf(100), BigDecimal.valueOf(0.9));
+
+        // 通过spring注入方法调用扩展点
         BigDecimal price1 = calculatePriceExtension.calculatePrice(orderDTO);
+
+        // 通过invoke方式调用扩展点
         BigDecimal price2 = extensionInvoker.invoke(CalculatePriceExtension.class, e -> e.calculatePrice(orderDTO));
+
+        // 通过invoke方式调用scope扩展点
         BigDecimal price3 = extensionInvoker.scopedInvoke("xxx", CalculatePriceExtension.class, e -> e.calculatePrice(orderDTO));
         return String.format("res: price1 = %.3f && price2 = %.3f && price3 = %.3f", price1, price2, price3);
     }
