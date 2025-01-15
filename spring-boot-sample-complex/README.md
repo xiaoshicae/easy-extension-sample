@@ -462,6 +462,16 @@ public class Controller {
   res: price = 90.000 && close order duration = PT0S && skip check list = [true, false]
   ```
 
+
+* Case6: 请求命中FilmBusiness & Scope命中TripBusiness (适用于一次请求多个业务情况)
+
+  ```shell
+  GET http://127.0.0.1:8080/api/process-with-invoker?name=film&scope=xxx&scopedName=xxx-trip
+    
+  命中了业务FilmBusiness & Scope命中TripBusiness
+  res: price1 = 90.000 && price2 = 90.000 && price3 = 65.000
+  ```
+
 ## Case5的扩展点冲突及执行情况分析
 
 | 扩展点实现                 | 优先级 | 生效条件                | CalculatePriceExtension      | DelayCloseOrderExtension | SkipCheckZeroPriceExtension |
