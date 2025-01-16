@@ -1,7 +1,7 @@
 package io.github.xiaoshicae.extension.nonspring.sample;
 
 
-import io.github.xiaoshicae.extension.core.AbstractExtensionPointDefaultImplementation;
+import io.github.xiaoshicae.extension.core.extension.AbstractExtensionPointDefaultImplementation;
 
 import java.util.List;
 
