@@ -25,7 +25,7 @@
     </modules>
 
     <properties>
-        <easy-extension-version>3.0.8</easy-extension-version>
+        <easy-extension-version>3.0.9</easy-extension-version>
         <easy-extension-sample-version>1.0.1-SNAPSHOT</easy-extension-sample-version>
 
         <maven.compiler.source>17</maven.compiler.source>

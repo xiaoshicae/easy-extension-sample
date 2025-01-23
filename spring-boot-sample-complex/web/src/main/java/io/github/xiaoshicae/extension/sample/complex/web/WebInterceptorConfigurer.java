@@ -33,7 +33,7 @@ public class WebInterceptorConfigurer implements WebMvcConfigurer {
                 String value = request.getParameter("value") != null ? request.getParameter("value").trim() : "unknown";
                 sessionManager.initSession(new MatchParam(name, value));
 
-                String scope = request.getParameter("scope") != null ? request.getParameter("scope").trim() : "";
+                String scope = request.getParameter("scope") != null ? request.getParameter("scope").trim() : "unknown";
                 String scopedName = request.getParameter("scopedName") != null ? request.getParameter("scopedName").trim() : "unknown";
                 String scopedValue = request.getParameter("scopedValue") != null ? request.getParameter("scopedValue").trim() : "unknown";
                 sessionManager.initScopedSession(scope, new MatchParam(scopedName, scopedValue));
