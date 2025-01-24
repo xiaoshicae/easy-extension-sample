@@ -3,7 +3,6 @@ package io.github.xiaoshicae.extension.nonspring.sample;
 
 import io.github.xiaoshicae.extension.core.business.AbstractBusiness;
 import io.github.xiaoshicae.extension.core.business.UsedAbility;
-import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
  * 实现了扩展点1和扩展点3
  * 业务B没有挂载任何能力
  */
-public class BusinessB extends AbstractBusiness<MyParam>  implements Matcher<MyParam>, Ext1, Ext3 {
+public class BusinessB extends AbstractBusiness<MyParam>  implements Ext1, Ext3 {
 
     /**
      * 业务code
