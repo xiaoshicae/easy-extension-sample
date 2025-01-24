@@ -1,7 +1,7 @@
 package io.github.xiaoshicae.extension.spring.sample.complex.simple;
 
 import io.github.xiaoshicae.extension.core.annotation.Business;
-import io.github.xiaoshicae.extension.core.common.Matcher;
+import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 
 /**
  * 业务A 实现了扩展点1，业务挂载了能力X，即继承了能力X的扩展点实现。

@@ -1,6 +1,6 @@
 package io.github.xiaoshicae.extension.spring.sample.complex.simple;
 
-import io.github.xiaoshicae.extension.core.ISessionManager;
+import io.github.xiaoshicae.extension.core.IExtensionSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import jakarta.annotation.Resource;
 public class WebInterceptorConfigurer implements WebMvcConfigurer {
 
     @Resource
-    private ISessionManager<MyParam> sessionManager;
+    private IExtensionSession<MyParam> session;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -30,14 +30,14 @@ public class WebInterceptorConfigurer implements WebMvcConfigurer {
             @Override
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
                 String name = request.getParameter("name") != null ? request.getParameter("name").trim() : "unknown";
-                sessionManager.initSession(new MyParam(name));
+                session.initSession(new MyParam(name));
                 return true;
             }
 
             // 请求结束后需要清空session
             @Override
             public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-                sessionManager.removeSession();
+                session.removeSession();
             }
         };
 
