@@ -2,7 +2,7 @@ package io.github.xiaoshicae.extension.spring.sample.complex.simple;
 
 
 import io.github.xiaoshicae.extension.core.annotation.Business;
-import io.github.xiaoshicae.extension.core.common.Matcher;
+import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 
 /**
  * 业务C

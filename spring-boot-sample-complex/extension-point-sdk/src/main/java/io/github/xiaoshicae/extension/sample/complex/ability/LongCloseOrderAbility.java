@@ -2,7 +2,7 @@ package io.github.xiaoshicae.extension.sample.complex.ability;
 
 
 import io.github.xiaoshicae.extension.core.annotation.Ability;
-import io.github.xiaoshicae.extension.core.common.Matcher;
+import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 import io.github.xiaoshicae.extension.sample.complex.extpoint.DelayCloseOrderExtension;
 import io.github.xiaoshicae.extension.sample.complex.matchparam.MatchParam;
 

@@ -1,6 +1,6 @@
 package io.github.xiaoshicae.extension.sample.complex.web;
 
-import io.github.xiaoshicae.extension.core.ISessionManager;
+import io.github.xiaoshicae.extension.core.IExtensionSession;
 import io.github.xiaoshicae.extension.sample.complex.matchparam.MatchParam;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebInterceptorConfigurer implements WebMvcConfigurer {
 
     @Resource
-    private ISessionManager<MatchParam> sessionManager;
+    private IExtensionSession<MatchParam> session;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -31,19 +31,19 @@ public class WebInterceptorConfigurer implements WebMvcConfigurer {
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
                 String name = request.getParameter("name") != null ? request.getParameter("name").trim() : "unknown";
                 String value = request.getParameter("value") != null ? request.getParameter("value").trim() : "unknown";
-                sessionManager.initSession(new MatchParam(name, value));
+                session.initSession(new MatchParam(name, value));
 
                 String scope = request.getParameter("scope") != null ? request.getParameter("scope").trim() : "unknown";
                 String scopedName = request.getParameter("scopedName") != null ? request.getParameter("scopedName").trim() : "unknown";
                 String scopedValue = request.getParameter("scopedValue") != null ? request.getParameter("scopedValue").trim() : "unknown";
-                sessionManager.initScopedSession(scope, new MatchParam(scopedName, scopedValue));
+                session.initScopedSession(scope, new MatchParam(scopedName, scopedValue));
                 return true;
             }
 
             // 请求结束后需要清空session
             @Override
             public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-                sessionManager.removeSession();
+                session.removeSession();
             }
         };
 

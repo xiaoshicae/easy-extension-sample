@@ -1,7 +1,7 @@
 package io.github.xiaoshicae.extension.nonspring.sample;
 
 import io.github.xiaoshicae.extension.core.ability.AbstractAbility;
-import io.github.xiaoshicae.extension.core.common.Matcher;
+import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 
 import java.util.List;
 

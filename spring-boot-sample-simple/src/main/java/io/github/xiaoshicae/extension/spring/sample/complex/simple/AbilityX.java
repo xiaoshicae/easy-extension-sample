@@ -1,7 +1,7 @@
 package io.github.xiaoshicae.extension.spring.sample.complex.simple;
 
 import io.github.xiaoshicae.extension.core.annotation.Ability;
-import io.github.xiaoshicae.extension.core.common.Matcher;
+import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 
 
 /**
