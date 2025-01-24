@@ -2,14 +2,13 @@ package io.github.xiaoshicae.extension.nonspring.sample;
 
 import io.github.xiaoshicae.extension.core.business.AbstractBusiness;
 import io.github.xiaoshicae.extension.core.business.UsedAbility;
-import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 
 import java.util.List;
 
 /**
  * 业务A 实现了扩展点1，业务挂载了能力X，即继承了能力X的扩展点实现。
  */
-public class BusinessA extends AbstractBusiness<MyParam>  implements Matcher<MyParam>, Ext1 {
+public class BusinessA extends AbstractBusiness<MyParam>  implements Ext1 {
     /**
      * code表示业务的唯一id (即业务身份)
      */

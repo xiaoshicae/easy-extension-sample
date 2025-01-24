@@ -10,7 +10,7 @@ import java.util.List;
  * 能力X
  * 实现了扩展点2
  */
-public class AbilityX extends AbstractAbility<MyParam> implements Matcher<MyParam>, Ext2 {
+public class AbilityX extends AbstractAbility<MyParam> implements Ext2 {
 
     /**
      * code表示能力唯一id
