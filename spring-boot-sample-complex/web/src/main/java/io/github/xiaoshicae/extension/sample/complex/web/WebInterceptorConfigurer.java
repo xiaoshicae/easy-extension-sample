@@ -47,6 +47,6 @@ public class WebInterceptorConfigurer implements WebMvcConfigurer {
             }
         };
 
-        registry.addInterceptor(interceptor).addPathPatterns("/api/**");
+        registry.addInterceptor(interceptor).addPathPatterns("/easy-extension-api/**");
     }
 }
