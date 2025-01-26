@@ -6,7 +6,7 @@ import io.github.xiaoshicae.extension.spring.boot.autoconfigure.annotation.Exten
 
 
 /**
- * Admin: http://127.0.0.1:8080/my-extension-admin
+ * Admin: http://127.0.0.1:8080/easy-extension-admin
  */
 @SpringBootApplication
 @ExtensionScan(scanPackages = "io.github.xiaoshicae.extension.sample.complex")

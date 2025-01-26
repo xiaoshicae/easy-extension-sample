@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 /**
- * Admin: http://127.0.0.1:8080/my-extension-admin
+ * Admin: http://127.0.0.1:8080/easy-extension-admin
  */
 
 @SpringBootTest(classes = Application.class)
@@ -28,12 +28,13 @@ public class ApplicationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private final String path = "/api/process";
+    private final String processPath = "/easy-extension-api/process";
+    private final String processWithInvokerPath = "/easy-extension-api/process-with-invoker";
 
     /**
      * Case1: 未命中任何业务
      *
-     * <p> GET http://127.0.0.1:8080/api/process?name=unknown
+     * <p> GET http://127.0.0.1:8080/easy-extension-api/process?name=unknown
      *
      * <p> 由于未命中任何业务,扩展点均走默认实现。
      *
@@ -45,13 +46,13 @@ public class ApplicationTest {
     public void testCase1() throws Exception {
         String expected = "res: price = 90.000 && close order duration = PT10M && skip check list = [false]";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=unknown")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(expected));
+        mockMvc.perform(MockMvcRequestBuilders.get(processPath + "?name=unknown")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(expected));
     }
 
     /**
      * Case2: 请求命中TripBusiness
      *
-     * <p> GET http://127.0.0.1:8080/api/process?name=xxx-trip
+     * <p> GET http://127.0.0.1:8080/easy-extension-api/process?name=xxx-trip
      *
      * <p> 命中了业务Trip,业务实现了扩展点CalculatePriceExtension。
      *
@@ -63,14 +64,14 @@ public class ApplicationTest {
     public void testCase2() throws Exception {
         String excepted = "res: price = 65.000 && close order duration = PT10M && skip check list = [false]";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=xxx-trip")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
+        mockMvc.perform(MockMvcRequestBuilders.get(processPath + "?name=xxx-trip")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
     }
 
 
     /**
      * Case3: 请求命中FilmBusiness & 所有能力均未生效
      *
-     * <p> GET http://127.0.0.1:8080/api/process?name=film
+     * <p> GET http://127.0.0.1:8080/easy-extension-api/process?name=film
      *
      * <p> 命中了业务FilmBusiness,业务实现了扩展点DelayCloseOrderExtension,业务所挂载的能力均未生效。
      *
@@ -82,13 +83,13 @@ public class ApplicationTest {
     public void testCase3() throws Exception {
         String excepted = "res: price = 90.000 && close order duration = PT3M && skip check list = [false]";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=film")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
+        mockMvc.perform(MockMvcRequestBuilders.get(processPath + "?name=film")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
     }
 
     /**
      * Case4: 请求命中FilmBusiness & LongCloseOrderAbility能力生效
      *
-     * <p> GET http://127.0.0.1:8080/api/process?name=film&value=long-close
+     * <p> GET http://127.0.0.1:8080/easy-extension-api/process?name=film&value=long-close
      *
      * <p>
      * 命中了业务FilmBusiness，业务实现了扩展点DelayCloseOrderExtension。
@@ -105,13 +106,13 @@ public class ApplicationTest {
     public void testCase4() throws Exception {
         String excepted = "res: price = 90.000 && close order duration = PT1H && skip check list = [false]";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=film&value=long-close")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
+        mockMvc.perform(MockMvcRequestBuilders.get(processPath + "?name=film&value=long-close")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
     }
 
     /**
      * Case5: 请求命中FilmBusiness & FreeTrialAbility能力生效 &LongCloseOrderAbility能力生效
      *
-     * <p> GET http://127.0.0.1:8080/api/process?name=film&value=long-close::free-trial
+     * <p> GET http://127.0.0.1:8080/easy-extension-api/process?name=film&value=long-close::free-trial
      *
      * <p>
      * 命中了业务FilmBusiness，业务实现了扩展点DelayCloseOrderExtension。
@@ -132,19 +133,19 @@ public class ApplicationTest {
     public void testCase5() throws Exception {
         String excepted = "res: price = 90.000 && close order duration = PT0S && skip check list = [true, false]";
 
-        mockMvc.perform(MockMvcRequestBuilders.get(path + "?name=film&value=long-close::free-trial")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
+        mockMvc.perform(MockMvcRequestBuilders.get(processPath + "?name=film&value=long-close::free-trial")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
     }
 
     /**
      * Case6: scope测试
      *
-     * <p> GET http://127.0.0.1:8080/api/process-with-invoker?name=film&scope=xxx&scopedName=xxx-trip
+     * <p> GET http://127.0.0.1:8080/easy-extension-api/process-with-invoker?name=film&scope=xxx&scopedName=xxx-trip
      *
      * <p> 命中了业务FilmBusiness，scope命中xxx-trip
      */
     @Test
     public void testCase6() throws Exception {
         String excepted = "res: price1 = 90.000 && price2 = 90.000 && price3 = 65.000";
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/process-with-invoker?name=film&scope=xxx&scopedName=xxx-trip")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
+        mockMvc.perform(MockMvcRequestBuilders.get(processWithInvokerPath + "?name=film&scope=xxx&scopedName=xxx-trip")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(excepted));
     }
 }

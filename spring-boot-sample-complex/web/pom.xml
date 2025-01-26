@@ -36,23 +36,23 @@
         <!-- 源码jar包依赖，admin会读取展示在页面上 -->
         <!-- 线上部署需要取消下面注释，本地调试还可以参考/doc/resources-code-classpath.png进行配置 -->
 
-<!--        <dependency>-->
-<!--            <groupId>io.github.xiaoshicae</groupId>-->
-<!--            <artifactId>extension-point-sdk</artifactId>-->
-<!--            <classifier>sources</classifier> &lt;!&ndash; 通过sources引入源码jar包 &ndash;&gt;-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.github.xiaoshicae</groupId>
+            <artifactId>extension-point-sdk</artifactId>
+            <classifier>sources</classifier> <!-- 通过sources引入源码jar包 -->
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>io.github.xiaoshicae</groupId>-->
-<!--            <artifactId>business-trip</artifactId>-->
-<!--            <classifier>sources</classifier>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.github.xiaoshicae</groupId>
+            <artifactId>business-trip</artifactId>
+            <classifier>sources</classifier>
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>io.github.xiaoshicae</groupId>-->
-<!--            <artifactId>business-film</artifactId>-->
-<!--            <classifier>sources</classifier>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.github.xiaoshicae</groupId>
+            <artifactId>business-film</artifactId>
+            <classifier>sources</classifier>
+        </dependency>
 
         <!--  springboot依赖  -->
         <dependency>
