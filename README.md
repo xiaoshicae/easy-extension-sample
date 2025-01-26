@@ -4,6 +4,7 @@
 * SpringBoot复杂场景(能力叠加，冲突等)，请参考[spring-boot-sample-complex](/spring-boot-sample-complex/README.md)
 * 简单场景的非Spring-oot项目接入(需要自己注册业务和能力)
   ，请参考[none-spring-boot-sample](/none-spring-boot-sample/README.md)
+* Admin在线体验地址: https://www.xlemon.site/easy-extension-admin
 
 ## 📖 文档
 
