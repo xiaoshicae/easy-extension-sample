@@ -1,6 +1,7 @@
 # Easy Extension 使用样例
 
-[Easy Extension](https://github.com/xiaoshicae/easy-extension) 是一个轻量级的 Java 业务扩展点框架，通过**扩展点 + 能力 + 业务**的架构模式，优雅地解决多业务场景下的逻辑复用与隔离问题。
+[Easy Extension](https://github.com/xiaoshicae/easy-extension) 是一个轻量级的 Java 业务扩展点框架，通过**扩展点 + 能力 +
+业务**的架构模式，优雅地解决多业务场景下的逻辑复用与隔离问题。
 
 本仓库提供了从简单到复杂的完整使用样例，帮助你快速上手框架。
 
@@ -64,42 +65,42 @@ easy-extension-sample/
 <details>
 <summary>10 个扩展点</summary>
 
-| 扩展点 | 说明 | 默认值 |
-|--------|------|--------|
-| OrderValidateExtension | 订单校验 | 金额校验 |
-| StockCheckExtension | 库存检查 | 全部充足 |
-| PromotionCalcExtension | 促销计算 | ¥0 无优惠 |
-| FreightCalcExtension | 运费计算 | ¥8 基础运费 |
-| TaxCalcExtension | 税费计算 | ¥0 国内无税 |
-| RiskControlExtension | 风控检查 | PASS |
-| PaymentMethodExtension | 支付方式 | 支付宝、微信 |
-| InvoiceExtension | 发票处理 | 不开票 |
-| AfterSalePolicyExtension | 售后策略 | 不支持退货 |
-| NotifyExtension | 通知策略 | APP推送 |
+| 扩展点                      | 说明   | 默认值     |
+|--------------------------|------|---------|
+| OrderValidateExtension   | 订单校验 | 金额校验    |
+| StockCheckExtension      | 库存检查 | 全部充足    |
+| PromotionCalcExtension   | 促销计算 | ¥0 无优惠  |
+| FreightCalcExtension     | 运费计算 | ¥8 基础运费 |
+| TaxCalcExtension         | 税费计算 | ¥0 国内无税 |
+| RiskControlExtension     | 风控检查 | PASS    |
+| PaymentMethodExtension   | 支付方式 | 支付宝、微信  |
+| InvoiceExtension         | 发票处理 | 不开票     |
+| AfterSalePolicyExtension | 售后策略 | 不支持退货   |
+| NotifyExtension          | 通知策略 | APP推送   |
 
 </details>
 
 <details>
 <summary>5 个能力</summary>
 
-| 能力 | 实现的扩展点 | 效果 |
-|------|------------|------|
-| FreeShippingAbility | 运费计算 | 运费 = ¥0 |
-| Return7DaysAbility | 售后策略 | 7天无理由退货 |
-| VipCouponAbility | 促销计算 | 额外减免 ¥20 |
+| 能力                   | 实现的扩展点      | 效果             |
+|----------------------|-------------|----------------|
+| FreeShippingAbility  | 运费计算        | 运费 = ¥0        |
+| Return7DaysAbility   | 售后策略        | 7天无理由退货        |
+| VipCouponAbility     | 促销计算        | 额外减免 ¥20       |
 | RapidDeliveryAbility | 运费计算 + 通知策略 | 加急费 ¥8 + 多渠道通知 |
-| InstallmentAbility | 支付方式 + 风控检查 | 3/6/12期免息分期 |
+| InstallmentAbility   | 支付方式 + 风控检查 | 3/6/12期免息分期    |
 
 </details>
 
 <details>
 <summary>3 个业务</summary>
 
-| 业务 | 优先级 | 挂载能力 | 特色 |
-|------|--------|---------|------|
-| RetailBusiness（标准零售） | 100 | 包邮 + 7天退货 + VIP优惠 | 标准电商流程 |
-| FreshBusiness（生鲜电商） | 50 | 包邮 + 急速达 | 冷链运费、2h退货窗口 |
-| DigitalBusiness（数码3C） | 75 | 7天退货 + 分期 + VIP + 包邮 | 15天退货、>¥5000人工审核、电子发票 |
+| 业务                    | 优先级 | 挂载能力                 | 特色                    |
+|-----------------------|-----|----------------------|-----------------------|
+| RetailBusiness（标准零售）  | 100 | 包邮 + 7天退货 + VIP优惠    | 标准电商流程                |
+| FreshBusiness（生鲜电商）   | 50  | 包邮 + 急速达             | 冷链运费、2h退货窗口           |
+| DigitalBusiness（数码3C） | 75  | 7天退货 + 分期 + VIP + 包邮 | 15天退货、>¥5000人工审核、电子发票 |
 
 </details>
 
@@ -140,25 +141,27 @@ curl "http://127.0.0.1:8080/api/process?name=biz-a::ability-x"
 - 本地访问地址: `http://127.0.0.1:8080/easy-extension-admin`
 
 引入依赖即可启用：
+
 ```xml
+
 <dependency>
     <groupId>io.github.xiaoshicae</groupId>
     <artifactId>easy-extension-admin-spring-boot-starter</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.4</version>
 </dependency>
 ```
 
-| 扩展点管理 | 冲突检测 |
-|:----------:|:--------:|
+|               扩展点管理                |                   冲突检测                    |
+|:----------------------------------:|:-----------------------------------------:|
 | ![扩展点管理](/doc/admin-extension.png) | ![冲突检测](/doc/admin-business-conflict.png) |
 
 ## 技术栈
 
-| 组件 | 版本 |
-|------|------|
-| Easy Extension | 3.3.0 |
-| Spring Boot | 4.0.5 |
-| Java | 21 |
+| 组件             | 版本    |
+|----------------|-------|
+| Easy Extension | 3.3.4 |
+| Spring Boot    | 4.0.5 |
+| Java           | 21    |
 
 ## 文档
 

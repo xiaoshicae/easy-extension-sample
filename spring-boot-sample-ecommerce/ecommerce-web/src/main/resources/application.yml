@@ -1,0 +1,17 @@
+easy-extension:
+  allow-unknown-business: true
+  enable-log: true
+  admin:
+    docUrl: "https://github.com/xiaoshicae/easy-extension"
+    path: /easy-extension-admin
+    extension-point-order:
+      - OrderValidateExtension
+      - StockCheckExtension
+      - PromotionCalcExtension
+      - FreightCalcExtension
+      - TaxCalcExtension
+      - RiskControlExtension
+      - PaymentMethodExtension
+      - InvoiceExtension
+      - AfterSalePolicyExtension
+      - NotifyExtension

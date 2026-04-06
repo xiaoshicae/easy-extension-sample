@@ -11,84 +11,69 @@
     </parent>
 
     <groupId>io.github.xiaoshicae</groupId>
-    <artifactId>easy-extension-sample</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <artifactId>spring-boot-sample-ecommerce</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>none-spring-boot-sample</module>
-        <module>spring-boot-sample-simple</module>
-        <module>spring-boot-sample-ecommerce</module>
+        <module>ecommerce-extension-point-sdk</module>
+        <module>business-retail</module>
+        <module>business-fresh</module>
+        <module>business-digital</module>
+        <module>ecommerce-web</module>
     </modules>
 
     <properties>
         <easy-extension-version>3.3.4</easy-extension-version>
-        <easy-extension-sample-version>1.0.1-SNAPSHOT</easy-extension-sample-version>
-
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.github.xiaoshicae</groupId>
-                <artifactId>easy-extension-core</artifactId>
-                <version>${easy-extension-version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.github.xiaoshicae</groupId>
                 <artifactId>easy-extension-spring-boot-starter</artifactId>
                 <version>${easy-extension-version}</version>
             </dependency>
-
             <dependency>
                 <groupId>io.github.xiaoshicae</groupId>
                 <artifactId>easy-extension-admin-spring-boot-starter</artifactId>
                 <version>${easy-extension-version}</version>
             </dependency>
-
             <dependency>
                 <groupId>io.github.xiaoshicae</groupId>
-                <artifactId>extension-point-sdk</artifactId>
-                <version>${easy-extension-sample-version}</version>
+                <artifactId>ecommerce-extension-point-sdk</artifactId>
+                <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>io.github.xiaoshicae</groupId>
-                <artifactId>business-trip</artifactId>
-                <version>${easy-extension-sample-version}</version>
+                <artifactId>business-retail</artifactId>
+                <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>io.github.xiaoshicae</groupId>
-                <artifactId>business-film</artifactId>
-                <version>${easy-extension-sample-version}</version>
+                <artifactId>business-fresh</artifactId>
+                <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>io.github.xiaoshicae</groupId>
-                <artifactId>extension-point-sdk</artifactId>
-                <classifier>sources</classifier>
-                <version>${easy-extension-sample-version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.github.xiaoshicae</groupId>
-                <artifactId>business-trip</artifactId>
-                <classifier>sources</classifier>
-                <version>${easy-extension-sample-version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.github.xiaoshicae</groupId>
-                <artifactId>business-film</artifactId>
-                <classifier>sources</classifier>
-                <version>${easy-extension-sample-version}</version>
+                <artifactId>business-digital</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <!-- Annotation processor: provided scope, only for compile-time metadata generation -->
+        <dependency>
+            <groupId>io.github.xiaoshicae</groupId>
+            <artifactId>easy-extension-annotation-processor</artifactId>
+            <version>${easy-extension-version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <pluginManagement>
