@@ -26,7 +26,7 @@ public class TripBusiness implements Matcher<MatchParam>, CalculatePriceExtensio
      * @return name包含xxx-trip即表示是酒旅业务
      */
     @Override
-    public Boolean match(MatchParam param) {
+    public boolean match(MatchParam param) {
         return param.getName().contains("xxx-trip");
     }
 

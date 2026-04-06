@@ -20,7 +20,7 @@ public class BusinessC implements Matcher<MyParam> {
      * @return 业务是否命中
      */
     @Override
-    public Boolean match(MyParam param) {
+    public boolean match(MyParam param) {
         return param.getName().contains("biz-c");
     }
 }

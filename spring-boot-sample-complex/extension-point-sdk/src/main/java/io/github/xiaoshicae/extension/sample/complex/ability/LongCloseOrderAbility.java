@@ -24,7 +24,7 @@ public class LongCloseOrderAbility implements Matcher<MatchParam>, DelayCloseOrd
      * @return value包含long-close即表示长关单能力生效
      */
     @Override
-    public Boolean match(MatchParam param) {
+    public boolean match(MatchParam param) {
         return param.getValue().contains("long-close");
     }
 

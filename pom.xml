@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.0</version>
+        <version>4.0.5</version>
     </parent>
 
     <groupId>io.github.xiaoshicae</groupId>
@@ -22,10 +22,11 @@
         <module>spring-boot-sample-complex/business-film</module>
         <module>spring-boot-sample-complex/extension-point-sdk</module>
         <module>spring-boot-sample-complex/web</module>
+        <module>spring-boot-sample-ecommerce</module>
     </modules>
 
     <properties>
-        <easy-extension-version>3.1.1</easy-extension-version>
+        <easy-extension-version>3.3.3</easy-extension-version>
         <easy-extension-sample-version>1.0.1-SNAPSHOT</easy-extension-sample-version>
 
         <maven.compiler.source>17</maven.compiler.source>
@@ -92,4 +93,24 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>io.github.xiaoshicae</groupId>
+                                <artifactId>easy-extension-annotation-processor</artifactId>
+                                <version>${easy-extension-version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

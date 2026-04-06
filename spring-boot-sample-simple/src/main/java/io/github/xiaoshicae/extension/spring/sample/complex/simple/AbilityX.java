@@ -19,7 +19,7 @@ public class AbilityX implements Matcher<MyParam>, Ext2 {
      * @return 能力是否生效
      */
     @Override
-    public Boolean match(MyParam param) {
+    public boolean match(MyParam param) {
         return param.getName().contains("ability-x");
     }
 

@@ -26,7 +26,7 @@ public class FilmBusiness implements Matcher<MatchParam>, DelayCloseOrderExtensi
      * @return name包含film即表示是酒旅业务
      */
     @Override
-    public Boolean match(MatchParam param) {
+    public boolean match(MatchParam param) {
         return param.getName().contains("film");
     }
 

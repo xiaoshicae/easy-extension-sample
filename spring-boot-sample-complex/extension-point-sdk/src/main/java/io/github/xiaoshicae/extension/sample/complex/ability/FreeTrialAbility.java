@@ -24,7 +24,7 @@ public class FreeTrialAbility implements Matcher<MatchParam>, DelayCloseOrderExt
      * @return value包含free-trial即表示免费体验能力生效
      */
     @Override
-    public Boolean match(MatchParam param) {
+    public boolean match(MatchParam param) {
         return param.getValue().contains("free-trial");
     }
 
