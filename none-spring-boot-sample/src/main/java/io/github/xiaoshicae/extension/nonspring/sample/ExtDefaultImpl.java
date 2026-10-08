@@ -1,16 +1,16 @@
 package io.github.xiaoshicae.extension.nonspring.sample;
 
 
-import io.github.xiaoshicae.extension.core.extension.AbstractExtensionPointDefaultImplementation;
-
-import java.util.List;
+import io.github.xiaoshicae.extension.core.annotation.DefaultImplementation;
 
 
 /**
  * 扩展点的默认实现
- * 需要实现所有的扩展点，当命中的能力和生效的能力都没有实现某个扩展点是，默认实现会作为兜底逻辑
+ * 当命中的业务和生效的能力都没有实现某个扩展点时，默认实现会作为兜底逻辑
+ * 每个扩展点至多一个默认实现，一个类可以同时兜底多个扩展点
  */
-public class ExtDefaultImpl extends AbstractExtensionPointDefaultImplementation<MyParam> implements Ext1,Ext2,Ext3 {
+@DefaultImplementation
+public class ExtDefaultImpl implements Ext1, Ext2, Ext3 {
 
     /**
      * 扩展点1的默认实现
@@ -34,13 +34,5 @@ public class ExtDefaultImpl extends AbstractExtensionPointDefaultImplementation<
     @Override
     public String doSomething3() {
         return "Default doSomething3";
-    }
-
-    /**
-     * 扩展点的实现情况
-     */
-    @Override
-    public List<Class<?>> implementExtensionPoints() {
-        return List.of(Ext1.class, Ext2.class, Ext3.class);
     }
 }

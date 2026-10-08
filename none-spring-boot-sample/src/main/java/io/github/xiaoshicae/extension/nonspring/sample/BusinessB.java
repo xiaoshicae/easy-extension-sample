@@ -1,25 +1,16 @@
 package io.github.xiaoshicae.extension.nonspring.sample;
 
 
-import io.github.xiaoshicae.extension.core.business.AbstractBusiness;
-import io.github.xiaoshicae.extension.core.business.UsedAbility;
-
-import java.util.List;
+import io.github.xiaoshicae.extension.core.annotation.Business;
+import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 
 /**
  * 业务B
  * 实现了扩展点1和扩展点3
  * 业务B没有挂载任何能力
  */
-public class BusinessB extends AbstractBusiness<MyParam>  implements Ext1, Ext3 {
-
-    /**
-     * 业务code
-     */
-    @Override
-    public String code() {
-        return "app.business.b";
-    }
+@Business(code = "app.business.b")
+public class BusinessB implements Matcher<MyParam>, Ext1, Ext3 {
 
     /**
      * 业务命中判断
@@ -31,14 +22,6 @@ public class BusinessB extends AbstractBusiness<MyParam>  implements Ext1, Ext3 
     @Override
     public boolean match(MyParam param) {
         return param.getName().contains("biz-b");
-    }
-
-    /**
-     * BusinessB实现了扩展点1和3
-     */
-    @Override
-    public List<Class<?>> implementExtensionPoints() {
-        return List.of(Ext1.class, Ext3.class);
     }
 
     /**
@@ -55,21 +38,5 @@ public class BusinessB extends AbstractBusiness<MyParam>  implements Ext1, Ext3 
     @Override
     public String doSomething3() {
         return "BusinessB doSomething3";
-    }
-
-    /**
-     * BusinessB的优先级
-     */
-    @Override
-    public Integer priority() {
-        return 0;
-    }
-
-    /**
-     * BusinessB未使用任何能力
-     */
-    @Override
-    public List<UsedAbility> usedAbilities() {
-        return List.of();
     }
 }

@@ -1,24 +1,16 @@
 package io.github.xiaoshicae.extension.nonspring.sample;
 
-import io.github.xiaoshicae.extension.core.ability.AbstractAbility;
+import io.github.xiaoshicae.extension.core.annotation.Ability;
 import io.github.xiaoshicae.extension.core.interfaces.Matcher;
-
-import java.util.List;
 
 
 /**
  * 能力X
  * 实现了扩展点2
+ * code表示能力唯一id(缺省为类全名)
  */
-public class AbilityX extends AbstractAbility<MyParam> implements Ext2 {
-
-    /**
-     * code表示能力唯一id
-     */
-    @Override
-    public String code() {
-        return "app.ability.x";
-    }
+@Ability(code = "app.ability.x")
+public class AbilityX implements Matcher<MyParam>, Ext2 {
 
     /**
      * 能力生效判断
@@ -30,14 +22,6 @@ public class AbilityX extends AbstractAbility<MyParam> implements Ext2 {
     @Override
     public boolean match(MyParam param) {
         return param.getName().contains("ability-x");
-    }
-
-    /**
-     * AbilityX实现了扩展点2
-     */
-    @Override
-    public List<Class<?>> implementExtensionPoints() {
-        return List.of(Ext2.class);
     }
 
     /**

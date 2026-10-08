@@ -1,15 +1,15 @@
 package io.github.xiaoshicae.extension.spring.sample.complex.simple;
 
 
-import io.github.xiaoshicae.extension.core.annotation.ExtensionPointDefaultImplementation;
+import io.github.xiaoshicae.extension.core.annotation.DefaultImplementation;
 
 
 /**
  * 扩展点的默认实现
- * 需要实现所有的扩展点，当命中的能力和生效的能力都没有实现某个扩展点是，默认实现会作为兜底逻辑
- * 需要@ExtensionPointDefaultImplementation注解
+ * 当命中的业务和生效的能力都没有实现某个扩展点时，默认实现会作为兜底逻辑
+ * 需要@DefaultImplementation注解；每个扩展点至多一个默认实现，一个类可以同时兜底多个扩展点
  */
-@ExtensionPointDefaultImplementation
+@DefaultImplementation
 public class ExtDefaultImpl implements Ext1, Ext2, Ext3 {
 
     /**

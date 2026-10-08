@@ -1,10 +1,7 @@
 package io.github.xiaoshicae.extension.nonspring.sample;
 
-import io.github.xiaoshicae.extension.core.DefaultExtensionContext;
-import io.github.xiaoshicae.extension.core.util.ExtensionContextRegisterHelper;
-import io.github.xiaoshicae.extension.core.IExtensionContext;
-import io.github.xiaoshicae.extension.core.exception.ExtensionException;
-import io.github.xiaoshicae.extension.core.exception.QueryException;
+import io.github.xiaoshicae.extension.core.Binding;
+import io.github.xiaoshicae.extension.core.ExtensionContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +10,7 @@ import java.util.List;
 
 public class Application {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Application m = new Application();
 
         // Case1: 未命中任何业务
@@ -30,75 +27,54 @@ public class Application {
 
         // Case4: 请求命中BusinessA & AbilityX未生效
         res = m.process("biz-a");
-        System.out.println("Case3, param=biz-a, " + res);
+        System.out.println("Case4, param=biz-a, " + res);
 
         // Case5: 请求命中BusinessA & AbilityX生效
         res = m.process("biz-a::ability-x");
-        System.out.println("Case3, param=biz-a::ability-x, " + res);
+        System.out.println("Case5, param=biz-a::ability-x, " + res);
     }
 
-    private final IExtensionContext<MyParam> extContext = new DefaultExtensionContext<>();
+    private final ExtensionContext<MyParam> extContext = buildExtensionContext();
 
-    public Application() throws Exception {
-        this.registerBusinessAndAbility(extContext);
-    }
-
-    public String process(String param) throws ExtensionException {
-        try {
-            beforeProcess(param);
+    public String process(String param) {
+        // 请求开始时绑定匹配参数，try-with-resources 结束时自动解绑
+        try (Binding binding = extContext.bind(new MyParam(param))) {
             return doProcess();
-        } finally {
-            afterProcess();
         }
     }
 
-    private String doProcess() throws QueryException {
+    private String doProcess() {
         // 执行扩展点1，具体用哪个实现，由匹配到的业务及生效的能力+优先级决定
-        Ext1 ext1 = extContext.getFirstMatchedExtension(Ext1.class);
+        Ext1 ext1 = extContext.first(Ext1.class);
         String s1 = ext1.doSomething1();
 
         // 执行扩展点2，具体用哪个实现，由匹配到的业务及生效的能力+优先级决定
-        Ext2 ext2 = extContext.getFirstMatchedExtension(Ext2.class);
+        Ext2 ext2 = extContext.first(Ext2.class);
         String s2 = ext2.doSomething2();
 
-        // 按优先级从高到低，依次执行扩展点3的业务或生效能力的实现
+        // 按优先级从高到低，依次执行扩展点3的业务或生效能力的实现(最后是默认实现)
         List<String> s3List = new ArrayList<>();
-        List<Ext3> ext3List = extContext.getAllMatchedExtension(Ext3.class);
-        for (Ext3 ext3 : ext3List) {
+        for (Ext3 ext3 : extContext.all(Ext3.class)) {
             s3List.add(ext3.doSomething3());
         }
         return String.format("res: ext1 = %s, ext2 = %s, ext3List = %s", s1, s2, Arrays.toString(s3List.toArray()));
     }
 
-
-    private void beforeProcess(String param) throws ExtensionException {
-        extContext.initSession(new MyParam(param));
-    }
-
-    private void afterProcess() throws ExtensionException {
-        extContext.removeSession();
-    }
-
-    private void registerBusinessAndAbility(IExtensionContext<MyParam> register) throws ExtensionException {
-        // 册helper工具(便于注册不受顺序影响)
-        ExtensionContextRegisterHelper<MyParam> helper = new ExtensionContextRegisterHelper<>(register);
-
-        // 收集扩展点
-        helper.addExtensionPointClasses(Ext1.class, Ext2.class, Ext3.class);
-
-        // 收集匹配参数class
-        helper.setMatcherParamClass(MyParam.class);
-
-        // 收集扩展点默认实现
-        helper.setExtensionPointDefaultImplementation(new ExtDefaultImpl());
-
-        // 收集能力
-        helper.addAbilities(new AbilityX());
-
-        // 收集业务
-        helper.addBusinesses(new BusinessA(), new BusinessB(), new BusinessC());
-
-        // 执行注册
-        helper.doRegister();
+    private static ExtensionContext<MyParam> buildExtensionContext() {
+        // build() 时一次性校验全部装配(注册顺序不影响结果)，构建后不可变
+        return ExtensionContext.<MyParam>builder()
+                // 扩展点
+                .extensionPoint(Ext1.class, Ext2.class, Ext3.class)
+                // 扩展点默认实现
+                .defaultImplementation(new ExtDefaultImpl())
+                // 能力
+                .ability(new AbilityX())
+                // 业务
+                .business(new BusinessA())
+                .business(new BusinessB())
+                .business(new BusinessC())
+                // 非严格模式：未命中任何业务时，扩展点走默认实现(Case1)；严格模式(缺省)下会抛出ResolutionException
+                .strict(false)
+                .build();
     }
 }

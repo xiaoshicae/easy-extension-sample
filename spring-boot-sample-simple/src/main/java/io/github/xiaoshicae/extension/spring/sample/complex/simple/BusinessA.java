@@ -5,9 +5,10 @@ import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 
 /**
  * 业务A 实现了扩展点1，业务挂载了能力X，即继承了能力X的扩展点实现。
- * <br>需要@Business注解，以便包扫描能识别到；code表示业务的唯一id；abilities表示业务挂载的能力
+ * <br>需要@Business注解，以便包扫描能识别到；code表示业务的唯一id；abilities表示业务挂载的能力(能力类)
+ * <br>abilities的数组顺序即优先级；未列出Self.class时，业务自身优先
  */
-@Business(code = "xxx.biz.a", abilities = "app.ability.x")
+@Business(code = "xxx.biz.a", abilities = AbilityX.class)
 public class BusinessA implements Matcher<MyParam>, Ext1 {
 
     /**

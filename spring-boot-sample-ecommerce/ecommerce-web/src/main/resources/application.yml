@@ -1,6 +1,8 @@
 easy-extension:
   allow-unknown-business: true
-  enable-log: true
+  # 不绑定业务身份的请求路径(Ant 风格)，admin 后台不需要业务身份
+  session-exclude-path-patterns:
+    - /easy-extension-admin/**
   admin:
     docUrl: "https://github.com/xiaoshicae/easy-extension"
     path: /easy-extension-admin
@@ -15,3 +17,8 @@ easy-extension:
       - InvoiceExtension
       - AfterSalePolicyExtension
       - NotifyExtension
+
+logging:
+  level:
+    # 打印每次请求匹配的业务和能力情况
+    io.github.xiaoshicae.extension.core.internal.Resolver: DEBUG

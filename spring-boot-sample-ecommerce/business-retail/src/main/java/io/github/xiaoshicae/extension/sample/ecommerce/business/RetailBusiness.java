@@ -1,6 +1,10 @@
 package io.github.xiaoshicae.extension.sample.ecommerce.business;
 
 import io.github.xiaoshicae.extension.core.annotation.Business;
+import io.github.xiaoshicae.extension.core.annotation.Self;
+import io.github.xiaoshicae.extension.sample.ecommerce.ability.FreeShippingAbility;
+import io.github.xiaoshicae.extension.sample.ecommerce.ability.Return7DaysAbility;
+import io.github.xiaoshicae.extension.sample.ecommerce.ability.VipCouponAbility;
 import io.github.xiaoshicae.extension.sample.ecommerce.dto.OrderContext;
 import io.github.xiaoshicae.extension.sample.ecommerce.extpoint.*;
 import io.github.xiaoshicae.extension.sample.ecommerce.matchparam.OrderMatchParam;
@@ -15,9 +19,10 @@ import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 /**
  * 标准零售业务
  * 最基础的电商流程，挂载了包邮和七天无理由能力
+ * abilities 的数组顺序即优先级(靠前者优先)，Self.class 表示业务自身的位置
  */
-@Business(code = RetailBusiness.CODE, priority = 100,
-        abilities = {"ability.free-shipping::10", "ability.return-7d::20", "ability.vip-coupon::30"})
+@Business(code = RetailBusiness.CODE,
+        abilities = {FreeShippingAbility.class, Return7DaysAbility.class, VipCouponAbility.class, Self.class})
 public class RetailBusiness implements Matcher<OrderMatchParam>, OrderValidateExtension, NotifyExtension {
 
     public static final String CODE = "biz.retail";
