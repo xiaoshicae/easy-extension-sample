@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * | bizCode=fresh&abilityCodes=rapid    | 生鲜电商    | 急速达                  | 短信+推送+微信多渠道通知                   |
  * | bizCode=digital                     | 数码3C     | 无                    | 风控REVIEW(>5000)、15天退货、电子发票      |
  * | bizCode=digital&abilityCodes=installment | 数码3C | 分期免息       | 支持3/6/12期分期支付                    |
+ * | bizCode=fresh&abilityCodes=free-shipping | 生鲜电商 | 包邮          | 能力排在业务自身(Self)之前，覆盖冷链运费      |
+ * | bizCode=digital&abilityCodes=return-7d   | 数码3C  | 七天无理由      | 能力排在业务自身(Self)之前，覆盖15天退货      |
  */
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -126,5 +128,29 @@ public class EcommerceApplicationTest {
                 .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("促销优惠: -¥20.00")))
                 .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("运费: +¥0")))
                 .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("installment_12")));
+    }
+
+    /**
+     * Case9: 生鲜电商 + 包邮 — 能力与业务实现了同一个扩展点(运费计算)
+     * FreshBusiness 的 abilities = {FreeShippingAbility, RapidDeliveryAbility, Self}，包邮排在业务自身之前
+     * 预期: 包邮能力覆盖业务自身的冷链运费(¥21)，运费 ¥0
+     */
+    @Test
+    public void testFreshWithFreeShippingOverridesBusiness() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(checkoutPath + "?bizCode=fresh&abilityCodes=free-shipping"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("运费: +¥0\n")));
+    }
+
+    /**
+     * Case10: 数码3C + 七天无理由 — 能力与业务实现了同一个扩展点(售后策略)
+     * DigitalBusiness 的 abilities = {Return7DaysAbility, ..., Self}，七天无理由排在业务自身之前
+     * 预期: 七天无理由能力覆盖业务自身的15天退货，退货窗口 7天
+     */
+    @Test
+    public void testDigitalWithReturn7DaysOverridesBusiness() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(checkoutPath + "?bizCode=digital&abilityCodes=return-7d"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("退货窗口: 7天")));
     }
 }
