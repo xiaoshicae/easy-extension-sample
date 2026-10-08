@@ -1,13 +1,11 @@
 package io.github.xiaoshicae.extension.sample.ecommerce.matchparam;
 
-import io.github.xiaoshicae.extension.core.annotation.MatcherParam;
-
 import java.util.List;
 
 /**
  * 匹配参数，用于判断 Business 和 Ability 是否生效
+ * 参数类型由 Matcher<OrderMatchParam> 的泛型推导，无需额外注解
  */
-@MatcherParam
 public class OrderMatchParam {
     /**
      * 业务标识，如 retail, fresh, digital

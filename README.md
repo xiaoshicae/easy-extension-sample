@@ -12,26 +12,21 @@
 - **扩展点**: 系统定义的接口（如运费计算、订单校验），规定"做什么"
 - **能力**: 通用的实现（如包邮、VIP优惠），可被多个业务复用
 - **业务**: 接入方（如零售、生鲜），挂载需要的能力，也可以自己实现扩展点
-- **默认实现**: 所有扩展点的兜底实现，保证扩展点的默认行为
+- **默认实现**: 扩展点的兜底实现，保证扩展点的默认行为（每个扩展点至多一个，一个类可兜底多个扩展点）
 
 ## 工作原理
 
 <img src="/doc/how-it-works.svg" alt="运行流程">
 
-一个请求进来后，框架自动完成：**匹配业务 → 激活能力 → 按优先级排序 → 调用正确的实现**。业务方只需实现自己关心的扩展点，其余自动降级到通用能力或默认实现。
+一个请求进来后，框架自动完成：**匹配业务 → 激活能力 → 按 `abilities` 顺序排序 → 调用正确的实现**。业务方只需实现自己关心的扩展点，其余自动降级到通用能力或默认实现。
 
 ## 样例一览
 
-本仓库包含 4 个由浅入深的示例项目：
+本仓库包含 3 个由浅入深的示例项目：
 
 ```
 easy-extension-sample/
 ├── spring-boot-sample-simple        # 入门示例：3个扩展点 + 1个能力 + 3个业务
-├── spring-boot-sample-complex/      # 进阶示例：能力叠加、扩展点冲突解决
-│   ├── extension-point-sdk          #   扩展点SDK（公共定义）
-│   ├── business-film                #   电影票业务
-│   ├── business-trip                #   酒旅业务
-│   └── web                          #   Web应用
 ├── spring-boot-sample-ecommerce/    # 完整电商示例：10个扩展点 + 5个能力 + 3个业务
 │   ├── ecommerce-extension-point-sdk#   电商扩展点SDK
 │   ├── business-retail              #   标准零售业务
@@ -49,16 +44,7 @@ easy-extension-sample/
 - 1 个能力 `AbilityX`，3 个业务 `BusinessA` / `BusinessB` / `BusinessC`
 - 展示：默认兜底、能力挂载继承、`List<Extension>` 获取所有生效实现
 
-### 2. 复杂场景 — [spring-boot-sample-complex](/spring-boot-sample-complex/README.md)
-
-以电商下单场景为例，展示能力叠加与冲突解决。
-
-- 3 个扩展点：算价、延迟关单、跳过0元校验
-- 2 个能力：免费体验（`FreeTrialAbility`）、长关单（`LongCloseOrderAbility`）
-- 2 个业务：电影票（`FilmBusiness`，优先级30）、酒旅（`TripBusiness`）
-- 重点演示：**同一扩展点的多个实现之间按优先级冲突解决**
-
-### 3. 电商完整场景 — [spring-boot-sample-ecommerce](/spring-boot-sample-ecommerce/)
+### 2. 电商完整场景 — [spring-boot-sample-ecommerce](/spring-boot-sample-ecommerce/)
 
 覆盖完整电商下单流程的大型示例，适合作为实际项目参考。
 
@@ -96,17 +82,17 @@ easy-extension-sample/
 <details>
 <summary>3 个业务</summary>
 
-| 业务                    | 优先级 | 挂载能力                 | 特色                    |
-|-----------------------|-----|----------------------|-----------------------|
-| RetailBusiness（标准零售）  | 100 | 包邮 + 7天退货 + VIP优惠    | 标准电商流程                |
-| FreshBusiness（生鲜电商）   | 50  | 包邮 + 急速达             | 冷链运费、2h退货窗口           |
-| DigitalBusiness（数码3C） | 75  | 7天退货 + 分期 + VIP + 包邮 | 15天退货、>¥5000人工审核、电子发票 |
+| 业务                    | 挂载能力（`abilities` 顺序即优先级，`Self` 为业务自身） | 特色                    |
+|-----------------------|-----------------------------------------|-----------------------|
+| RetailBusiness（标准零售）  | 包邮 → 7天退货 → VIP优惠 → Self                | 标准电商流程                |
+| FreshBusiness（生鲜电商）   | 包邮 → 急速达 → Self                         | 冷链运费、2h退货窗口           |
+| DigitalBusiness（数码3C） | 7天退货 → 分期 → VIP → 包邮 → Self             | 15天退货、>¥5000人工审核、电子发票 |
 
 </details>
 
-### 4. 非 SpringBoot 场景 — [none-spring-boot-sample](/none-spring-boot-sample/README.md)
+### 3. 非 SpringBoot 场景 — [none-spring-boot-sample](/none-spring-boot-sample/README.md)
 
-纯 Java 接入方式，无需 Spring 容器，手动注册业务和能力。
+纯 Java 接入方式，无需 Spring 容器，用 `ExtensionContext.builder()` 注册扩展点、默认实现、能力和业务。
 
 ## 快速开始
 
@@ -147,7 +133,7 @@ curl "http://127.0.0.1:8080/api/process?name=biz-a::ability-x"
 <dependency>
     <groupId>io.github.xiaoshicae</groupId>
     <artifactId>easy-extension-admin-spring-boot-starter</artifactId>
-    <version>3.3.4</version>
+    <version>4.0.0</version>
 </dependency>
 ```
 
@@ -159,13 +145,15 @@ curl "http://127.0.0.1:8080/api/process?name=biz-a::ability-x"
 
 | 组件             | 版本    |
 |----------------|-------|
-| Easy Extension | 3.3.4 |
+| Easy Extension | 4.0.0 |
 | Spring Boot    | 4.0.5 |
 | Java           | 21    |
 
 ## 文档
 
 框架设计及详细使用文档请参考: [Wiki](https://github.com/xiaoshicae/easy-extension/wiki)
+
+从 3.x 升级请参考: [迁移指南](https://github.com/xiaoshicae/easy-extension/blob/main/doc/migration-4.0.md)
 
 ## License
 

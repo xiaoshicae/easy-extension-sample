@@ -4,7 +4,7 @@ SpringBoot简单场景
 
 ## 一、其它场景demo
 
-* SpringBoot复杂场景(能力叠加，冲突等)，请参考[spring-boot-sample-complex](../spring-boot-sample-complex/README.md)
+* SpringBoot电商完整场景(能力叠加，优先级等)，请参考[spring-boot-sample-ecommerce](../spring-boot-sample-ecommerce/)
 * 简单场景的非Spring-oot项目接入(需要自己注册业务和能力)
   ，请参考[none-spring-boot-sample](../none-spring-boot-sample/README.md)
 * 框架设计及详细使用文档请参考: [wiki](https://github.com/xiaoshicae/easy-extension/wiki)
@@ -44,10 +44,10 @@ SpringBoot简单场景
   ```java
   /**
    * 扩展点的默认实现
-   * 需要实现所有的扩展点，当命中的能力和生效的能力都没有实现某个扩展点是，默认实现会作为兜底逻辑
-   * 需要@ExtensionPointDefaultImplementation注解
+   * 当命中的业务和生效的能力都没有实现某个扩展点时，默认实现会作为兜底逻辑
+   * 需要@DefaultImplementation注解；每个扩展点至多一个默认实现，一个类可以同时兜底多个扩展点
    */
-  @ExtensionPointDefaultImplementation
+  @DefaultImplementation
   public class ExtDefaultImpl implements Ext1, Ext2, Ext3 {
   
       /**
@@ -81,12 +81,10 @@ SpringBoot简单场景
   ```java
   /**
    * 生效匹配的参数
-   * 需要@MatcherParam注解，以便包扫描能识别到
    * 该参数由具体业务自己定义，所有的业务和能力均需要基于该参数进行生效判断
-   * 用于业务(BusinessA/BusinessB)生效匹配的参数，
-   * 在请求开始是将该参数准备好，传给EasyExtension的ISessionManager进行管理，后续扩展点调用是会遍历判断哪个业务和哪些能力生效
+   * 用于业务(BusinessA/BusinessB)生效匹配的参数，参数类型由Matcher<MyParam>的泛型推导，无需额外注解
+   * 每次请求由MatcherParamResolver从HTTP请求构造该参数，框架据此判断哪个业务和哪些能力生效
    */
-  @MatcherParam
   public class MyParam {
       private final String name;
   
@@ -119,7 +117,7 @@ SpringBoot简单场景
        * @return 能力是否生效
        */
       @Override
-      public Boolean match(MyParam param) {
+      public boolean match(MyParam param) {
           return param.getName().contains("ability-x");
       }
   
@@ -139,10 +137,11 @@ SpringBoot简单场景
   /**
    * 业务A
    * 实现了扩展点1
-   * 需要@Business注解，以便包扫描能识别到；code表示能力的唯一id；abilities表示业务挂载的能力
+   * 需要@Business注解，以便包扫描能识别到；code表示业务的唯一id；abilities表示业务挂载的能力(能力类)
    * 业务挂载了能力，即继承了能力的扩展点实现
+   * abilities的数组顺序即优先级；未列出Self.class时，业务自身优先
    */
-  @Business(code = "xxx.biz.a", abilities = "app.ability.x")
+  @Business(code = "xxx.biz.a", abilities = AbilityX.class)
   public class BusinessA implements Matcher<MyParam>, Ext1 {
   
       /**
@@ -153,7 +152,7 @@ SpringBoot简单场景
        * @return 业务是否命中
        */
       @Override
-      public Boolean match(MyParam param) {
+      public boolean match(MyParam param) {
           return param.getName().contains("biz-a");
       }
   
@@ -183,7 +182,7 @@ SpringBoot简单场景
        * @return 业务是否命中
        */
       @Override
-      public Boolean match(MyParam param) {
+      public boolean match(MyParam param) {
           return param.getName().contains("biz-b");
       }
   
@@ -221,46 +220,28 @@ SpringBoot简单场景
        * @return 业务是否命中
        */
       @Override
-      public Boolean match(MyParam param) {
+      public boolean match(MyParam param) {
           return param.getName().contains("biz-c");
       }
   }
   ```
 
-* Session初始化
+* 匹配参数解析
 
   ```java
   /**
-   * web请求的Interceptor
-   * 在请求处理前，准备好生效匹配的参数<MyParam>
-   * 传给EasyExtension的ISessionManager进行管理，后续扩展点调用是会遍历判断哪个业务和哪些能力生效
+   * 提供MatcherParamResolver Bean即可：框架在每个web请求开始前，用它从HTTP请求构造匹配参数<MyParam>并绑定到当前线程，
+   * 请求结束后自动解绑，无需手写Interceptor
    */
-  @Component
-  public class WebInterceptorConfigurer implements WebMvcConfigurer {
-  
-      @Resource
-      private ISessionManager<MyParam> sessionManager;
-  
-      @Override
-      public void addInterceptors(InterceptorRegistry registry) {
-          HandlerInterceptor interceptor = new HandlerInterceptor() {
-              // 请求开始前需要准备生效匹配的参数<MyParam>
-              // 初始化session
-              @Override
-              public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-                  String name = request.getParameter("name") != null ? request.getParameter("name").trim() : "unknown";
-                  sessionManager.initSession(new MyParam(name));
-                  return true;
-              }
-  
-              // 请求结束后需要清空session
-              @Override
-              public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-                  sessionManager.removeSession();
-              }
+  @Configuration
+  public class MatcherParamConfig {
+
+      @Bean
+      public MatcherParamResolver<MyParam> matcherParamResolver() {
+          return request -> {
+              String name = request.getParameter("name");
+              return new MyParam(name != null ? name.trim() : "unknown");
           };
-  
-          registry.addInterceptor(interceptor).addPathPatterns("/**").excludePathPatterns("/favicon.ico");
       }
   }
   ```
@@ -315,7 +296,7 @@ SpringBoot简单场景
 
 | 扩展点实现     | 生效条件              | Ext1                     | Ext2                   | Ext3                     |
 |-----------|-------------------|--------------------------|------------------------|--------------------------|
-| AbilityX  | name包含"ability-x" | "AbilityX doSomething1"  | -                      | -                        |
+| AbilityX  | name包含"ability-x" | -                        | "AbilityX doSomething2" | -                        |
 | BusinessA | name包含"biz-a"     | "BusinessA doSomething1" | -                      | -                        |
 | BusinessB | name包含"biz-b"     | "BusinessB doSomething1" | -                      | "BusinessB doSomething3" |
 | BusinessC | name包含"biz-c"     | -                        | -                      | -                        |
@@ -366,6 +347,6 @@ SpringBoot简单场景
   GET http://127.0.0.1:8080/api/process?name=biz-a::ability-x
   
   命中了业务A,且能力X生效,业务A实现了扩展点1,能力X实现扩展点2,因此返回值为:
-  res: res: ext1 = BusinessA doSomething1, ext2 = AbilityX doSomething2, ext3List = [Default doSomething3]
+  res: ext1 = BusinessA doSomething1, ext2 = AbilityX doSomething2, ext3List = [Default doSomething3]
   ```
   

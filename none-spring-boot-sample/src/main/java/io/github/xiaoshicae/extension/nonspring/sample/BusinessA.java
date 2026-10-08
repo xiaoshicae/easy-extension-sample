@@ -1,21 +1,16 @@
 package io.github.xiaoshicae.extension.nonspring.sample;
 
-import io.github.xiaoshicae.extension.core.business.AbstractBusiness;
-import io.github.xiaoshicae.extension.core.business.UsedAbility;
-
-import java.util.List;
+import io.github.xiaoshicae.extension.core.annotation.Business;
+import io.github.xiaoshicae.extension.core.annotation.Self;
+import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 
 /**
  * 业务A 实现了扩展点1，业务挂载了能力X，即继承了能力X的扩展点实现。
+ * code表示业务的唯一id (即业务身份)
+ * abilities的数组顺序即优先级：Self.class表示业务自身的位置，这里业务自身优先于能力X
  */
-public class BusinessA extends AbstractBusiness<MyParam>  implements Ext1 {
-    /**
-     * code表示业务的唯一id (即业务身份)
-     */
-    @Override
-    public String code() {
-        return "";
-    }
+@Business(code = "app.business.a", abilities = {Self.class, AbilityX.class})
+public class BusinessA implements Matcher<MyParam>, Ext1 {
 
     /**
      * 业务命中判断
@@ -30,34 +25,10 @@ public class BusinessA extends AbstractBusiness<MyParam>  implements Ext1 {
     }
 
     /**
-     * BusinessA实现了扩展点1
-     */
-    @Override
-    public List<Class<?>> implementExtensionPoints() {
-        return List.of(Ext1.class);
-    }
-
-    /**
      * 扩展点1的BusinessA自定义实现
      */
     @Override
     public String doSomething1() {
         return "BusinessA doSomething1";
-    }
-
-    /**
-     * BusinessA的优先级
-     */
-    @Override
-    public Integer priority() {
-        return 0;
-    }
-
-    /**
-     * BusinessA使用了AbilityX
-     */
-    @Override
-    public List<UsedAbility> usedAbilities() {
-        return List.of(new UsedAbility("app.ability.x", 1));
     }
 }

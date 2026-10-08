@@ -1,6 +1,11 @@
 package io.github.xiaoshicae.extension.sample.ecommerce.business;
 
 import io.github.xiaoshicae.extension.core.annotation.Business;
+import io.github.xiaoshicae.extension.core.annotation.Self;
+import io.github.xiaoshicae.extension.sample.ecommerce.ability.FreeShippingAbility;
+import io.github.xiaoshicae.extension.sample.ecommerce.ability.InstallmentAbility;
+import io.github.xiaoshicae.extension.sample.ecommerce.ability.Return7DaysAbility;
+import io.github.xiaoshicae.extension.sample.ecommerce.ability.VipCouponAbility;
 import io.github.xiaoshicae.extension.sample.ecommerce.dto.OrderContext;
 import io.github.xiaoshicae.extension.sample.ecommerce.extpoint.*;
 import io.github.xiaoshicae.extension.sample.ecommerce.matchparam.OrderMatchParam;
@@ -15,9 +20,10 @@ import io.github.xiaoshicae.extension.core.interfaces.Matcher;
  * 数码3C业务
  * 特色: 分期支付、延保售后、专票支持、严格风控
  * 挂载了七天无理由和分期免息能力
+ * abilities 的数组顺序即优先级(靠前者优先)，Self.class 表示业务自身的位置
  */
-@Business(code = DigitalBusiness.CODE, priority = 75,
-        abilities = {"ability.return-7d::10", "ability.installment::20", "ability.vip-coupon::30", "ability.free-shipping::40"})
+@Business(code = DigitalBusiness.CODE,
+        abilities = {Return7DaysAbility.class, InstallmentAbility.class, VipCouponAbility.class, FreeShippingAbility.class, Self.class})
 public class DigitalBusiness implements Matcher<OrderMatchParam>, OrderValidateExtension, AfterSalePolicyExtension,
         RiskControlExtension, InvoiceExtension {
 

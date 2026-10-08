@@ -1,6 +1,6 @@
 package io.github.xiaoshicae.extension.sample.ecommerce.defaultimpl;
 
-import io.github.xiaoshicae.extension.core.annotation.ExtensionPointDefaultImplementation;
+import io.github.xiaoshicae.extension.core.annotation.DefaultImplementation;
 import io.github.xiaoshicae.extension.sample.ecommerce.dto.OrderContext;
 import io.github.xiaoshicae.extension.sample.ecommerce.extpoint.*;
 
@@ -14,7 +14,7 @@ import java.util.Map;
  * 电商下单流程默认实现
  * 实现了所有10个扩展点，作为系统兜底能力
  */
-@ExtensionPointDefaultImplementation
+@DefaultImplementation
 public class EcommerceDefaultImpl implements
         OrderValidateExtension,
         StockCheckExtension,

@@ -1,6 +1,9 @@
 package io.github.xiaoshicae.extension.sample.ecommerce.business;
 
 import io.github.xiaoshicae.extension.core.annotation.Business;
+import io.github.xiaoshicae.extension.core.annotation.Self;
+import io.github.xiaoshicae.extension.sample.ecommerce.ability.FreeShippingAbility;
+import io.github.xiaoshicae.extension.sample.ecommerce.ability.RapidDeliveryAbility;
 import io.github.xiaoshicae.extension.sample.ecommerce.dto.OrderContext;
 import io.github.xiaoshicae.extension.sample.ecommerce.extpoint.*;
 import io.github.xiaoshicae.extension.sample.ecommerce.matchparam.OrderMatchParam;
@@ -17,9 +20,10 @@ import io.github.xiaoshicae.extension.core.interfaces.Matcher;
  * 生鲜电商业务
  * 特色: 冷链运费计算、库存实时检查、急速达通知、不支持无理由退货
  * 挂载了包邮和急速达能力
+ * abilities 的数组顺序即优先级(靠前者优先)，Self.class 表示业务自身的位置
  */
-@Business(code = FreshBusiness.CODE, priority = 50,
-        abilities = {"ability.free-shipping::10", "ability.rapid-delivery::20"})
+@Business(code = FreshBusiness.CODE,
+        abilities = {FreeShippingAbility.class, RapidDeliveryAbility.class, Self.class})
 public class FreshBusiness implements Matcher<OrderMatchParam>, OrderValidateExtension, FreightCalcExtension,
         StockCheckExtension, AfterSalePolicyExtension {
 
