@@ -3,6 +3,8 @@ easy-extension:
   # 不绑定业务身份的请求路径(Ant 风格)，admin 后台不需要业务身份
   session-exclude-path-patterns:
     - /easy-extension-admin/**
+  # @Async / applicationTaskExecutor 的任务沿用提交者的业务绑定(4.1)，见 OrderNotifyService
+  async-propagation: true
   admin:
     docUrl: "https://github.com/xiaoshicae/easy-extension"
     path: /easy-extension-admin

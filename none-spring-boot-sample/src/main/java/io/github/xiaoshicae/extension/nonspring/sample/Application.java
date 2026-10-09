@@ -1,6 +1,5 @@
 package io.github.xiaoshicae.extension.nonspring.sample;
 
-import io.github.xiaoshicae.extension.core.Binding;
 import io.github.xiaoshicae.extension.core.ExtensionContext;
 
 import java.util.ArrayList;
@@ -37,10 +36,9 @@ public class Application {
     private final ExtensionContext<MyParam> extContext = buildExtensionContext();
 
     public String process(String param) {
-        // 请求开始时绑定匹配参数，try-with-resources 结束时自动解绑
-        try (Binding binding = extContext.bind(new MyParam(param))) {
-            return doProcess();
-        }
+        // 以 param 对应的业务执行 doProcess：绑定、执行、解绑一步完成(4.1)
+        // 4.0 写法：try (Binding binding = extContext.bind(new MyParam(param))) { return doProcess(); }
+        return extContext.callWith(new MyParam(param), this::doProcess);
     }
 
     private String doProcess() {

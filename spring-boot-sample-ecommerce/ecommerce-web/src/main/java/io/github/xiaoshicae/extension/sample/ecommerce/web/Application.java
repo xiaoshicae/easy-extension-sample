@@ -2,6 +2,7 @@ package io.github.xiaoshicae.extension.sample.ecommerce.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 import io.github.xiaoshicae.extension.spring.boot.autoconfigure.annotation.ExtensionScan;
 
 /**
@@ -10,6 +11,7 @@ import io.github.xiaoshicae.extension.spring.boot.autoconfigure.annotation.Exten
  * 应用包(web)下的类会自动扫描；扩展点、能力、业务分布在其他模块的包里，用 @ExtensionScan 补充扫描范围
  */
 @SpringBootApplication
+@EnableAsync
 @ExtensionScan(basePackages = "io.github.xiaoshicae.extension.sample.ecommerce")
 public class Application {
     public static void main(String[] args) {

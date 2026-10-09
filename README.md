@@ -48,6 +48,11 @@ easy-extension-sample/
 
 覆盖完整电商下单流程的大型示例，适合作为实际项目参考。
 
+还演示了 4.1 的绑定用法：
+
+- **异步线程沿用业务绑定**：`OrderNotifyService` 的 `@Async` 方法在线程池里调用扩展点，靠 `easy-extension.async-propagation: true` 拿到请求的业务(`POST /api/order/notify-async?bizCode=fresh&abilityCodes=rapid`)
+- **HTTP 之外的入口**：消息消费、定时任务、RPC 用 `context.callWith(param, () -> ...)` 绑定业务，见 `EcommerceApplicationTest#testCallWithOutsideHttp`
+
 <details>
 <summary>10 个扩展点</summary>
 
@@ -133,7 +138,7 @@ curl "http://127.0.0.1:8080/api/process?name=biz-a::ability-x"
 <dependency>
     <groupId>io.github.xiaoshicae</groupId>
     <artifactId>easy-extension-admin-spring-boot-starter</artifactId>
-    <version>4.0.0</version>
+    <version>4.1.0</version>
 </dependency>
 ```
 
@@ -145,7 +150,7 @@ curl "http://127.0.0.1:8080/api/process?name=biz-a::ability-x"
 
 | 组件             | 版本    |
 |----------------|-------|
-| Easy Extension | 4.0.0 |
+| Easy Extension | 4.1.0 |
 | Spring Boot    | 4.0.5 |
 | Java           | 21    |
 
