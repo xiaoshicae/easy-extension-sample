@@ -3,6 +3,7 @@ package io.github.xiaoshicae.extension.sample.ecommerce.web;
 import io.github.xiaoshicae.extension.sample.ecommerce.dto.OrderContext;
 import io.github.xiaoshicae.extension.sample.ecommerce.extpoint.*;
 import io.github.xiaoshicae.extension.spring.boot.autoconfigure.annotation.ExtensionInject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 电商下单流程控制器
@@ -53,6 +55,20 @@ public class OrderController {
     @ExtensionInject
     private List<PaymentMethodExtension> allPaymentMethodExtensions;
 
+    @Autowired
+    private OrderNotifyService orderNotifyService;
+
+    /**
+     * 异步通知: 通知渠道在 @Async 线程池里计算
+     * 依赖 easy-extension.async-propagation=true 把请求的业务绑定带到异步线程
+     * POST /api/order/notify-async?bizCode=fresh&abilityCodes=rapid
+     */
+    @PostMapping("/notify-async")
+    public String notifyAsync() throws Exception {
+        List<String> channels = orderNotifyService.notifyChannelsAsync(MockOrders.sample()).get(5, TimeUnit.SECONDS);
+        return "异步通知渠道: " + channels;
+    }
+
     /**
      * 完整下单流程
      * GET /api/order/checkout?bizCode=retail&abilityCodes=vip::free-shipping
@@ -62,18 +78,8 @@ public class OrderController {
     @PostMapping("/checkout")
     public String checkout() {
         // 构造模拟订单数据
-        List<OrderContext.OrderItem> items = List.of(
-                new OrderContext.OrderItem("SKU-001", "商品A", 2, new BigDecimal("99.00"), "general"),
-                new OrderContext.OrderItem("SKU-002", "商品B", 1, new BigDecimal("199.00"), "general")
-        );
-        BigDecimal originalAmount = new BigDecimal("397.00");
-
-        OrderContext ctx = new OrderContext(
-                "ORD-20260405-001", "USER-12345", "unknown",
-                items, originalAmount,
-                "广东省", "深圳市",
-                false, null, "alipay"
-        );
+        OrderContext ctx = MockOrders.sample();
+        BigDecimal originalAmount = ctx.getOriginalAmount();
 
         // ================= 下单流程 10 步 =================
 

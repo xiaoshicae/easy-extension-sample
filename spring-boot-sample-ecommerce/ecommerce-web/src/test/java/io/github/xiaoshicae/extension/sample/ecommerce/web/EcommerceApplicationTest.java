@@ -1,5 +1,8 @@
 package io.github.xiaoshicae.extension.sample.ecommerce.web;
 
+import io.github.xiaoshicae.extension.core.ExtensionContext;
+import io.github.xiaoshicae.extension.sample.ecommerce.extpoint.FreightCalcExtension;
+import io.github.xiaoshicae.extension.sample.ecommerce.matchparam.OrderMatchParam;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,6 +10,11 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 电商下单流程测试用例
@@ -23,6 +31,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * | bizCode=digital&abilityCodes=installment | 数码3C | 分期免息       | 支持3/6/12期分期支付                    |
  * | bizCode=fresh&abilityCodes=free-shipping | 生鲜电商 | 包邮          | 能力排在业务自身(Self)之前，覆盖冷链运费      |
  * | bizCode=digital&abilityCodes=return-7d   | 数码3C  | 七天无理由      | 能力排在业务自身(Self)之前，覆盖15天退货      |
+ * | notify-async: bizCode=fresh&abilityCodes=rapid | 生鲜电商 | 急速达    | @Async 线程沿用请求的业务绑定             |
+ * | context.callWith(fresh)                   | 生鲜电商  | 无             | 非 HTTP 入口绑定业务                     |
  */
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -30,6 +40,9 @@ public class EcommerceApplicationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ExtensionContext<OrderMatchParam> context;
 
     private final String checkoutPath = "/api/order/checkout";
 
@@ -152,5 +165,29 @@ public class EcommerceApplicationTest {
         mockMvc.perform(MockMvcRequestBuilders.post(checkoutPath + "?bizCode=digital&abilityCodes=return-7d"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("退货窗口: 7天")));
+    }
+
+    /**
+     * Case11: 异步线程沿用请求的业务绑定 — easy-extension.async-propagation=true
+     * 通知渠道在 @Async 线程池里计算，生鲜 + 急速达仍选中急速达能力的实现
+     * 预期: 与同步调用一致，包含短信和微信消息
+     */
+    @Test
+    public void testAsyncNotifyKeepsBusinessBinding() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/order/notify-async?bizCode=fresh&abilityCodes=rapid"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("SMS")))
+                .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("WECHAT_MSG")));
+    }
+
+    /**
+     * Case12: HTTP 之外的入口(消息消费、定时任务、RPC)用 callWith 绑定业务
+     * 预期: 以生鲜业务执行，运费为冷链运费 15 + 3 件 x 2 = ¥21
+     */
+    @Test
+    public void testCallWithOutsideHttp() {
+        BigDecimal freight = context.callWith(new OrderMatchParam("fresh", List.of()),
+                () -> context.first(FreightCalcExtension.class).calcFreight(MockOrders.sample()));
+        assertEquals(0, new BigDecimal("21").compareTo(freight));
     }
 }
