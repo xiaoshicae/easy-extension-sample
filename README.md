@@ -138,7 +138,7 @@ curl "http://127.0.0.1:8080/api/process?name=biz-a::ability-x"
 <dependency>
     <groupId>io.github.xiaoshicae</groupId>
     <artifactId>easy-extension-admin-spring-boot-starter</artifactId>
-    <version>4.1.0</version>
+    <version>4.1.1</version>
 </dependency>
 ```
 
@@ -150,7 +150,7 @@ curl "http://127.0.0.1:8080/api/process?name=biz-a::ability-x"
 
 | 组件             | 版本    |
 |----------------|-------|
-| Easy Extension | 4.1.0 |
+| Easy Extension | 4.1.1 |
 | Spring Boot    | 4.0.5 |
 | Java           | 21    |
 
