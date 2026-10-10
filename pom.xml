@@ -22,7 +22,7 @@
     </modules>
 
     <properties>
-        <easy-extension-version>4.1.1</easy-extension-version>
+        <easy-extension-version>5.0.0</easy-extension-version>
         <easy-extension-sample-version>1.0.1-SNAPSHOT</easy-extension-sample-version>
 
         <!-- easy-extension 4.0 需要 JDK 21；spring-boot-starter-parent 据此设置 maven.compiler.release -->
