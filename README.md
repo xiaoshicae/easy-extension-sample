@@ -158,7 +158,9 @@ curl "http://127.0.0.1:8080/api/process?name=biz-a::ability-x"
 
 框架设计及详细使用文档请参考: [Wiki](https://github.com/xiaoshicae/easy-extension/wiki)
 
-从 3.x 升级请参考: [迁移指南](https://github.com/xiaoshicae/easy-extension/blob/main/doc/migration-4.0.md)
+从 4.x 升级请参考: [5.0 迁移指南](https://github.com/xiaoshicae/easy-extension/blob/main/doc/migration-5.0.md)
+
+从 3.x 升级请参考: [4.0 迁移指南](https://github.com/xiaoshicae/easy-extension/blob/main/doc/migration-4.0.md)
 
 ## License
 
