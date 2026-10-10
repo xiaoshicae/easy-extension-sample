@@ -1,7 +1,6 @@
 package io.github.xiaoshicae.extension.sample.ecommerce.extpoint;
 
 import io.github.xiaoshicae.extension.core.annotation.ExtensionPoint;
-import io.github.xiaoshicae.extension.sample.ecommerce.dto.OrderContext;
 
 import java.math.BigDecimal;
 
@@ -13,8 +12,8 @@ import java.math.BigDecimal;
 public interface PromotionCalcExtension {
 
     /**
-     * @param ctx 订单上下文
+     * @param orderAmount 订单金额
      * @return 优惠金额（正数表示减免）
      */
-    BigDecimal calcPromotion(OrderContext ctx);
+    BigDecimal calcPromotion(BigDecimal orderAmount);
 }

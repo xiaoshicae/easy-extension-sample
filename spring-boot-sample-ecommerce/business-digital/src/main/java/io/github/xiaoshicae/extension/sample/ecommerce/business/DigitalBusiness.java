@@ -2,11 +2,11 @@ package io.github.xiaoshicae.extension.sample.ecommerce.business;
 
 import io.github.xiaoshicae.extension.core.annotation.Business;
 import io.github.xiaoshicae.extension.core.annotation.Self;
+import io.github.xiaoshicae.extension.core.interfaces.Matcher;
 import io.github.xiaoshicae.extension.sample.ecommerce.ability.FreeShippingAbility;
 import io.github.xiaoshicae.extension.sample.ecommerce.ability.InstallmentAbility;
 import io.github.xiaoshicae.extension.sample.ecommerce.ability.Return7DaysAbility;
 import io.github.xiaoshicae.extension.sample.ecommerce.ability.VipCouponAbility;
-import io.github.xiaoshicae.extension.sample.ecommerce.dto.OrderContext;
 import io.github.xiaoshicae.extension.sample.ecommerce.extpoint.*;
 import io.github.xiaoshicae.extension.sample.ecommerce.matchparam.OrderMatchParam;
 
@@ -14,12 +14,10 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
 
-import io.github.xiaoshicae.extension.core.interfaces.Matcher;
-
 /**
  * 数码3C业务
- * 特色: 分期支付、延保售后、专票支持、严格风控
- * 挂载了七天无理由和分期免息能力
+ * 特色: 自营15天延保、专票支持、新用户风控
+ * 挂载了七天无理由、分期免息、VIP优惠和包邮能力
  * abilities 的数组顺序即优先级(靠前者优先)，Self.class 表示业务自身的位置
  */
 @Business(code = DigitalBusiness.CODE,
@@ -29,44 +27,44 @@ public class DigitalBusiness implements Matcher<OrderMatchParam>, OrderValidateE
 
     public static final String CODE = "biz.digital";
 
+    private static final int MAX_ITEM_COUNT = 5;
+    private static final String NEW_USER_PREFIX = "NEW-";
+
     @Override
     public boolean match(OrderMatchParam param) {
         return "digital".equals(param.getBizCode());
     }
 
     @Override
-    public String validate(OrderContext ctx) {
-        if (ctx.getOriginalAmount() == null || ctx.getOriginalAmount().compareTo(BigDecimal.ZERO) <= 0) {
+    public String validate(BigDecimal orderAmount, int itemCount) {
+        if (orderAmount == null || orderAmount.compareTo(BigDecimal.ZERO) <= 0) {
             return "订单金额不能小于等于0";
         }
-        // 数码商品单价超过5000需要额外风控验证
-        if (ctx.getOriginalAmount().compareTo(new BigDecimal("5000")) > 0) {
-            // 这里仅做提示，实际由风控扩展点处理
+        // 数码商品限购，防止黄牛
+        if (itemCount > MAX_ITEM_COUNT) {
+            return "数码商品单次购买不能超过" + MAX_ITEM_COUNT + "件";
         }
         return null;
     }
 
     @Override
-    public Duration getReturnWindow(OrderContext ctx) {
-        // 数码3C: 15天无理由退货（高于标准7天）
+    public Duration getReturnWindow(List<String> categories) {
+        // 数码3C 自营延保 15 天，小额标品会先命中七天无理由能力，这里兜住大额和定制机
         return Duration.ofDays(15);
     }
 
     @Override
-    public String checkRisk(OrderContext ctx) {
-        // 数码商品风控: 超过 5000 元的订单需要人工审核
-        if (ctx.getOriginalAmount() != null && ctx.getOriginalAmount().compareTo(new BigDecimal("5000")) > 0) {
-            return "REVIEW";
-        }
-        return "PASS";
+    public String checkRisk(String userId, BigDecimal orderAmount) {
+        // 数码风控: 新注册用户需人工审核，大额订单的信用审核由分期免息能力负责
+        return userId != null && userId.startsWith(NEW_USER_PREFIX) ? "REVIEW" : "PASS";
     }
 
     @Override
-    public String determineInvoiceType(OrderContext ctx) {
-        // 数码业务默认开具电子发票
-        if (ctx.getNeedInvoice() != null && ctx.getNeedInvoice()) {
-            return "ELECTRONIC";
+    public String determineInvoiceType(boolean needInvoice, String invoiceTarget) {
+        // 数码业务: 企业抬头开专票，个人抬头开电子发票
+        if (!needInvoice) {
+            return "NONE";
         }
-        return "NONE";
+        return "company".equals(invoiceTarget) ? "SPECIAL" : "ELECTRONIC";
     }
 }

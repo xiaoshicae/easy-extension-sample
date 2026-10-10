@@ -50,48 +50,90 @@ easy-extension-sample/
 
 还演示了 4.1 的绑定用法：
 
-- **异步线程沿用业务绑定**：`OrderNotifyService` 的 `@Async` 方法在线程池里调用扩展点，靠 `easy-extension.async-propagation: true` 拿到请求的业务(`POST /api/order/notify-async?bizCode=fresh&abilityCodes=rapid`)
+- **异步线程沿用业务绑定**：`OrderNotifyService` 的 `@Async` 方法在线程池里调用扩展点，靠 `easy-extension.async-propagation: true` 拿到请求的业务(`POST /api/order/notify-async?bizCode=fresh&categories=fresh&urgent=true`)
 - **HTTP 之外的入口**：消息消费、定时任务、RPC 用 `context.callWith(param, () -> ...)` 绑定业务，见 `EcommerceApplicationTest#testCallWithOutsideHttp`
 
 <details>
 <summary>10 个扩展点</summary>
 
-| 扩展点                      | 说明   | 默认值     |
-|--------------------------|------|---------|
-| OrderValidateExtension   | 订单校验 | 金额校验    |
-| StockCheckExtension      | 库存检查 | 全部充足    |
-| PromotionCalcExtension   | 促销计算 | ¥0 无优惠  |
-| FreightCalcExtension     | 运费计算 | ¥8 基础运费 |
-| TaxCalcExtension         | 税费计算 | ¥0 国内无税 |
-| RiskControlExtension     | 风控检查 | PASS    |
-| PaymentMethodExtension   | 支付方式 | 支付宝、微信  |
-| InvoiceExtension         | 发票处理 | 不开票     |
-| AfterSalePolicyExtension | 售后策略 | 不支持退货   |
-| NotifyExtension          | 通知策略 | APP推送   |
+每个扩展点只声明自己需要的入参，而不是统一接收一个大而全的订单上下文：
+
+| 扩展点                      | 说明   | 入参                            | 默认值     |
+|--------------------------|------|-------------------------------|---------|
+| OrderValidateExtension   | 订单校验 | 金额、件数                         | 金额/件数校验 |
+| StockCheckExtension      | 库存检查 | SKU 及件数                       | 全部充足    |
+| PromotionCalcExtension   | 促销计算 | 金额                            | ¥0 无优惠  |
+| FreightCalcExtension     | 运费计算 | 收货省份、件数                       | ¥8 基础运费 |
+| TaxCalcExtension         | 税费计算 | 金额、商品品类                       | ¥0 国内无税 |
+| RiskControlExtension     | 风控检查 | 用户、金额                         | PASS    |
+| PaymentMethodExtension   | 支付方式 | 金额                            | 支付宝、微信  |
+| InvoiceExtension         | 发票处理 | 是否开票、抬头类型                     | 不开票     |
+| AfterSalePolicyExtension | 售后策略 | 商品品类                          | 不支持退货   |
+| NotifyExtension          | 通知策略 | 订单事件                          | APP推送   |
 
 </details>
 
 <details>
 <summary>5 个能力</summary>
 
-| 能力                   | 实现的扩展点      | 效果             |
-|----------------------|-------------|----------------|
-| FreeShippingAbility  | 运费计算        | 运费 = ¥0        |
-| Return7DaysAbility   | 售后策略        | 7天无理由退货        |
-| VipCouponAbility     | 促销计算        | 额外减免 ¥20       |
-| RapidDeliveryAbility | 运费计算 + 通知策略 | 加急费 ¥8 + 多渠道通知 |
-| InstallmentAbility   | 支付方式 + 风控检查 | 3/6/12期免息分期    |
+能力是否生效由能力自己的 `match(OrderMatchParam)` 按订单属性判断（会员等级、金额、收货省份、件数、是否加急、商品品类），
+请求不需要指明要启用哪些能力：
+
+| 能力                   | 命中条件                              | 实现的扩展点      | 效果                |
+|----------------------|-----------------------------------|-------------|-------------------|
+| FreeShippingAbility  | SVIP 会员，或 金额 ≥ ¥500 且收货地非偏远省份     | 运费计算        | 运费 = ¥0           |
+| Return7DaysAbility   | 不含生鲜/定制品类 且 金额 < ¥3000            | 售后策略        | 7天无理由退货           |
+| VipCouponAbility     | 会员等级为 VIP / SVIP                  | 促销计算        | 满 500 减 ¥50，否则 ¥20 |
+| RapidDeliveryAbility | 勾选加急 且 省份已开通急速达 且 件数 ≤ 10         | 运费计算 + 通知策略 | 加急费 ¥12 + 多渠道通知   |
+| InstallmentAbility   | 金额 ≥ ¥3000                        | 支付方式 + 风控检查 | 3/6/12期免息分期       |
 
 </details>
 
 <details>
 <summary>3 个业务</summary>
 
-| 业务                    | 挂载能力（`abilities` 顺序即优先级，`Self` 为业务自身） | 特色                    |
-|-----------------------|-----------------------------------------|-----------------------|
-| RetailBusiness（标准零售）  | 包邮 → 7天退货 → VIP优惠 → Self                | 标准电商流程                |
-| FreshBusiness（生鲜电商）   | 包邮 → 急速达 → Self                         | 冷链运费、2h退货窗口           |
-| DigitalBusiness（数码3C） | 7天退货 → 分期 → VIP → 包邮 → Self             | 15天退货、>¥5000人工审核、电子发票 |
+业务用 `bizCode` 认领请求，并决定挂载哪些能力以及它们的优先级：
+
+| 业务                    | 挂载能力（`abilities` 顺序即优先级，`Self` 为业务自身） | 特色                     |
+|-----------------------|-----------------------------------------|------------------------|
+| RetailBusiness（标准零售）  | 包邮 → 7天退货 → VIP优惠 → Self                | 标准电商流程                 |
+| FreshBusiness（生鲜电商）   | 包邮 → 急速达 → Self                         | 冷链运费(跨省加价)、2h退货窗口      |
+| DigitalBusiness（数码3C） | 7天退货 → 分期 → VIP → 包邮 → Self             | 15天延保、新用户人工审核、专票/电子发票  |
+
+</details>
+
+<details>
+<summary>请求参数</summary>
+
+同一份请求参数有两个用途：`MatcherParamConfig` 用它构造 `OrderMatchParam`（决定命中哪个业务、哪些能力），
+`OrderController` 用它作为扩展点的入参。
+
+| 参数            | 默认值        | 说明                                  |
+|---------------|------------|-------------------------------------|
+| bizCode       | retail     | 业务标识: retail / fresh / digital       |
+| memberLevel   | NORMAL     | 会员等级: NORMAL / VIP / SVIP            |
+| amount        | 397.00     | 订单金额                                |
+| itemCount     | 3          | 商品件数（演示订单按 2 + 1 拆到两个 SKU 上）         |
+| province      | 广东省        | 收货省份                                |
+| urgent        | false      | 是否勾选加急配送                            |
+| categories    | general    | 商品品类，逗号分隔: general / fresh / digital / custom |
+| userId        | USER-12345 | 下单用户，`NEW-` 前缀表示新注册用户                |
+| needInvoice   | false      | 是否开票                                |
+| invoiceTarget | personal   | 抬头类型: personal / company             |
+| notifyEvent   | ORDER_CREATED | 订单事件: ORDER_CREATED / SHIPPED / AFTER_SALE |
+
+中文参数值（如 `province=湖南省`）需要 URL 编码，否则 Tomcat 会直接返回 400。
+
+```bash
+# 标准零售 + VIP 会员: 命中 VIP 券，减 ¥20
+curl -X POST "http://127.0.0.1:8080/api/order/checkout?bizCode=retail&memberLevel=VIP"
+
+# 生鲜 + 加急: 命中急速达，多渠道通知 + 加急费
+curl -X POST "http://127.0.0.1:8080/api/order/checkout?bizCode=fresh&categories=fresh&urgent=true"
+
+# 数码大额订单: 命中分期和包邮，售后回落到业务自身的 15 天延保
+curl -X POST "http://127.0.0.1:8080/api/order/checkout?bizCode=digital&categories=digital&amount=6999"
+```
 
 </details>
 
