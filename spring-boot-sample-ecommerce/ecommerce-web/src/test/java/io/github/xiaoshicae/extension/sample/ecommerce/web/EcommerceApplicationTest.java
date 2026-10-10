@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * | bizCode=digital&abilityCodes=return-7d   | 数码3C  | 七天无理由      | 能力排在业务自身(Self)之前，覆盖15天退货      |
  * | notify-async: bizCode=fresh&abilityCodes=rapid | 生鲜电商 | 急速达    | @Async 线程沿用请求的业务绑定             |
  * | context.callWith(fresh)                   | 生鲜电商  | 无             | 非 HTTP 入口绑定业务                     |
+ * | bizCode=unknown&abilityCodes=vip,free-shipping | 无 | 无       | allow-unknown-business=true，全部走默认实现  |
  */
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -45,6 +46,21 @@ public class EcommerceApplicationTest {
     private ExtensionContext<OrderMatchParam> context;
 
     private final String checkoutPath = "/api/order/checkout";
+
+    /**
+     * 未知业务: 没有业务匹配，allow-unknown-business=true 时所有扩展点走默认实现
+     * 能力挂在业务上，没有业务时请求里带的能力也不生效(对比 testRetailWithVipAndFreeShipping)
+     */
+    @Test
+    public void testUnknownBusinessFallsBackToDefaults() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(checkoutPath + "?bizCode=unknown&abilityCodes=vip,free-shipping"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("促销优惠: -¥0\n")))
+                .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("运费: +¥8.00")))
+                .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("支付方式: [alipay, wechat]")))
+                .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("退货窗口: 不支持")))
+                .andExpect(MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("通知渠道: [PUSH]")));
+    }
 
     /**
      * Case1: 标准零售 — 无额外能力
